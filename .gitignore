@@ -30,5 +30,3 @@ Thumbs.db
 /src/environments/environment.ts
 
 # Arquivos TypeScript compilados (se houver)
-*.js
-*.js.map
