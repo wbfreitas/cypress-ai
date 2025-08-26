@@ -1,0 +1,28 @@
+<div class="header">
+  <button routerLink="/dashboard">Voltar</button>
+  <span>Formulário</span>
+</div>
+
+<div class="content">
+  <h2>Preencha o formulário</h2>
+  <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Nome:</label>
+      <input id="name" formControlName="name" />
+      <div *ngIf="submitted && myForm.controls.name.invalid" class="error">Nome é obrigatório</div>
+    </div>
+    <div>
+      <label for="age">Idade:</label>
+      <input id="age" formControlName="age" type="number" />
+      <div *ngIf="submitted && myForm.controls.age.invalid" class="error">Idade inválida</div>
+    </div>
+    <div>
+      <label for="description">Descrição:</label>
+      <textarea id="description" formControlName="description"></textarea>
+    </div>
+    <button type="submit">Enviar</button>
+  </form>
+  <div *ngIf="submitted && myForm.valid" class="success">
+    Formulário enviado com sucesso!
+  </div>
+</div>

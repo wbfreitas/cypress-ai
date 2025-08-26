@@ -1,0 +1,6 @@
+<div *ngIf="visible" class="modal" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <ng-content></ng-content>
+    <button (click)="onClose()">Fechar</button>
+  </div>
+</div>

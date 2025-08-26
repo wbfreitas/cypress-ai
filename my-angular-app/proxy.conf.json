@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "http://localhost:11434", // porta padrão do Ollama
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": { "^/api": "" }
+  }
+}
