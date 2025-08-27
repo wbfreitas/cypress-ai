@@ -3,10 +3,9 @@ describe('Interação com modal e sidebar', () => {
     cy.visit('/');
     cy.prompt([
       'Efetue login com email "user@ex.com" e senha "123456"',
-      'No dashboard, clique no botão "☰" para ocultar a sidebar',
-      'Clique novamente no botão do menu para exibir a sidebar',
-      'Clique no botão "Abrir Modal"',
-      'Feche o modal clicando no botão "Fechar"'
+      'Clique no botão que tenha o texto "Abrir Modal"',
+      'Feche o modal clicando no botão com o texto "Fechar"'
     ]);
   });
 });
+
