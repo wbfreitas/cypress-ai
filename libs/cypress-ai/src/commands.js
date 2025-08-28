@@ -1,8 +1,5 @@
-const { skip } = require("node:test")
-
-// libs/cypress-ai/src/commands.js
 function registerSupportCommands() {
-  Cypress.Commands.add('ai', (instructions, options = {skip: false}) => {
+  Cypress.Commands.add('ai', (instructions, options = {}) => {
     const specName = (Cypress.spec?.name || 'ai-generated.cy.js')
       .replace(/\.cy\.(ts|js)$/i, '.cy.js')
     const finalDir = options.finalDir || 'cypress/e2e-final'
@@ -22,7 +19,9 @@ function registerSupportCommands() {
     })
   })
 
-  Cypress.Commands.add('prompt', (steps, options = {}) => {
+  Cypress.Commands.add('prompt', (steps, options = {skip: false}) => {
+    if(options.skip) return;
+
     const text = Array.isArray(steps) ? steps.join('\n') : String(steps)
     return cy.ai(text, options)
   })
