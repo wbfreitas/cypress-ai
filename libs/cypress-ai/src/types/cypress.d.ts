@@ -4,6 +4,7 @@ declare global {
     interface Chainable {
       ai(instructions: string | string[], options?: import('./index').AiCommandOptions): Chainable<any>;
       prompt(steps: string | string[], options?: import('./index').PromptOptions): Chainable<any>;
+      runFinal(options?: { baseUrl?: string }): Chainable<any>;
     }
 
     interface PluginEvents {

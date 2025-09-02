@@ -14,6 +14,9 @@ export class CommandRegistry {
 
     // Comando 'prompt' para instruções de teste
     Cypress.Commands.add('prompt', CypressCommands.prompt);
+
+    // Comando 'runFinal' para executar teste final e perguntar sobre substituição
+    Cypress.Commands.add('runFinal', CypressCommands.runFinal);
   }
 
   /**

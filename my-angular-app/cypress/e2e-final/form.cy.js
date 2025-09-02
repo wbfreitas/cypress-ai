@@ -1,9 +1,51 @@
 describe('Teste E2E', () => {
-  it('deve preencher o formulário de login com email "user@ex.com" e senha "123456" e clicar no botão "Entrar"', () => {
+  it('deve preencher o email e senha e clicar no botão "Entrar"', () => {
     cy.visit('/');
     
-    cy.get('#email').type('user@ex.com');
-    cy.get('#password').type('123456');
-    cy.contains('button', 'Entrar').click();
+    cy.get('[id="email"]').type('user@ex.com');
+    cy.get('[id="password"]').type('123456');
+    
+    cy.get('[type="submit"]').click();
+  });
+
+  it('deve verificar se aparece "Bem-vindo" no dashboard', () => {
+    cy.visit('/');
+    
+    cy.get('[id="email"]').type('user@ex.com');
+    cy.get('[id="password"]').type('123456');
+    
+    cy.get('[type="submit"]').click();
+    
+    cy.contains('Bem-vindo').should('be.visible');
+  });
+
+  it('deve clicar no botão "Abrir Modal" e verificar se o modal aparece', () => {
+    cy.visit('/');
+    
+    cy.get('[id="email"]').type('user@ex.com');
+    cy.get('[id="password"]').type('123456');
+    
+    cy.get('[type="submit"]').click();
+    
+    cy.contains('Abrir Modal').click();
+    
+    cy.get('.modal').should('be.visible');
+  });
+
+  it('deve clicar no botão "Fechar" do modal', () => {
+    cy.visit('/');
+    
+    cy.get('[id="email"]').type('user@ex.com');
+    cy.get('[id="password"]').type('123456');
+    
+    cy.get('[type="submit"]').click();
+    
+    cy.contains('Abrir Modal').click();
+    
+    cy.get('.modal').should('be.visible');
+
+    cy.contains('Fechar').click();
+
+    cy.get('.modal').should('not.exist');
   });
 });

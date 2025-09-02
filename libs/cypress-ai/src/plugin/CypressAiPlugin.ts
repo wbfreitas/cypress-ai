@@ -26,6 +26,11 @@ export class CypressAiPlugin {
       // Task para executar testes existentes
       async 'cypress-ai:run-if-exists'(options: RunTestOptions) {
         return self.testGenerator.runTestIfExists(options);
+      },
+
+      // Task para executar teste final e perguntar sobre substituição
+      async 'cypress-ai:run-final-and-ask'(options: { specPath: string; aiSpecPath: string; baseUrl?: string }) {
+        return self.testGenerator.runFinalTestAndAsk(options);
       }
     });
 

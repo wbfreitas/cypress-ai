@@ -16,40 +16,11 @@ export class CypressCommands {
     const specPath = `${finalDir}/${specName}`;
     const agent = options.agent || 'ollama';
     const model = options.model || 'qwen2.5-coder:latest';
-    const runExisting = options.runExisting !== false; // default true
-    const stopOnExistingFailure = options.stopOnExistingFailure === true;
 
     return cy.document().then((doc: any) => {
       const html = doc.documentElement.outerHTML;
 
-      // Se habilitado, tenta rodar o spec final existente antes de gerar
-      if (runExisting) {
-        return cy.task('cypress-ai:run-if-exists', { 
-          specPath, 
-          baseUrl: Cypress.config('baseUrl') 
-        }).then((res: any) => {
-          if (res && res.ran && typeof res.status !== 'undefined' && res.status !== 0) {
-            // Falha ao executar o spec existente
-            if (stopOnExistingFailure) {
-              throw new Error(`Spec existente falhou (status=${res.status}). Aborting as requested.`);
-            }
-            // Senão, apenas logamos e continuamos para gerar
-            // eslint-disable-next-line no-console
-            console.warn('Spec existente falhou, mas continuando para geração:', res.stderr || res.stdout);
-          }
-
-          // Prossegue com a geração
-          return cy.task('cypress-ai:generate', {
-            instructions,
-            html,
-            specPath,
-            agent,
-            model
-          });
-        });
-      }
-
-      // Se não rodar existente, apenas gera
+      // Apenas gera o teste, não executa mais automaticamente
       return cy.task('cypress-ai:generate', {
         instructions,
         html,
@@ -70,5 +41,24 @@ export class CypressCommands {
 
     const text = Array.isArray(steps) ? steps.join('\n') : String(steps);
     return CypressCommands.ai(text, options as AiCommandOptions);
+  }
+
+  /**
+   * Comando 'runFinal' para executar o teste final e perguntar sobre substituição
+   */
+  static runFinal(options: { baseUrl?: string } = {}): any {
+    const specName = (Cypress.spec?.name || 'ai-generated.cy.js')
+      .replace(/\.cy\.(ts|js)$/i, '.cy.js');
+    const finalDir = 'cypress/e2e-final';
+    const aiDir = 'cypress/e2e-ai';
+    const finalSpecPath = `${finalDir}/${specName}`;
+    const aiSpecPath = `${aiDir}/${specName}`;
+    const baseUrl = options.baseUrl || Cypress.config('baseUrl');
+
+    return cy.task('cypress-ai:run-final-and-ask', {
+      specPath: finalSpecPath,
+      aiSpecPath: aiSpecPath,
+      baseUrl: baseUrl
+    });
   }
 }
