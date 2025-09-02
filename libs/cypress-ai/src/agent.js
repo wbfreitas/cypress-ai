@@ -4,6 +4,7 @@ module.exports = { installCypressAiPlugin }
 const fs = require('fs');
 const path = require('path');
 const { default: fetch } = require('node-fetch');
+const child_process = require('child_process');
 
 // constrói o prompt, como você já tinha definido:
 function buildPrompt(instructions, existing, html) {
@@ -18,6 +19,8 @@ function buildPrompt(instructions, existing, html) {
       5. Sempre inclua assertions para validar o comportamento esperado
       6. Escreva o teste em JavaScript para Cypress
       7. Siga as instruções do teste para gerar os arquivos
+      8. Caso exista um teste final, ele foi executado antes de gerar o html que você está recebendo
+      9. Complete o teste existente, se houver caso for necessario, Não remova teste existente, atualize-o quando for necessario ou crie cenarios novos quando você entender que faz sentido e não pertence ao contexto existe.
 
       **HTML Para os testes:**
        ${html}
@@ -34,6 +37,9 @@ function buildPrompt(instructions, existing, html) {
               // código do teste aqui
             });
           });
+
+        **TESTE EXISTENTE (se houver):**
+        ${existing}
       `
 }
 
@@ -71,9 +77,38 @@ function installCypressAiPlugin(on, config, defaults = {}) {
       const code = (data?.response || '').trim();
       if (!code) throw new Error('IA não retornou código de teste.');
 
+      const textoLimpo = code.replace(/^```javascript\n/, '').replace(/\n```$/, '');
+
       // grava/atualiza o teste final
-       fs.writeFileSync(abs, code, 'utf8');
+       fs.writeFileSync(abs, textoLimpo, 'utf8');
       return true;
+    }
+    ,
+    // verifica se o spec final existe e, se existir, executa-o via cypress run
+    async 'cypress-ai:run-if-exists'({ specPath, baseUrl = 'http://localhost:4200' }) {
+      try {
+        const abs = path.resolve(specPath);
+        if (!fs.existsSync(abs)) return { ran: false };
+
+        // monta o comando para rodar apenas o spec existente
+        const specArg = abs;
+        const args = ['cypress', 'run', '--spec', specArg, '--config', `baseUrl=${baseUrl}`];
+
+        // usa npx para executar cypress a partir do projeto (garante binário local)
+        const cmd = process.platform === 'win32' ? 'npx.cmd' : 'npx';
+
+        // roda de forma síncrona para simplificar e retornar o resultado
+        const result = child_process.spawnSync(cmd, args, { encoding: 'utf8' });
+
+        return {
+          ran: true,
+          status: result.status,
+          stdout: result.stdout || '',
+          stderr: result.stderr || ''
+        };
+      } catch (err) {
+        return { ran: false, error: String(err) };
+      }
     }
   });
 
