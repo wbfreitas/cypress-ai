@@ -14,7 +14,7 @@
 // })
 import { defineConfig } from 'cypress'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { installCypressAiPlugin } = require('cypress-ai/src/agent')
+const { installCypressAiPlugin } = require('cypress-ai/dist/agent')
 
 export default defineConfig({
   e2e: {
