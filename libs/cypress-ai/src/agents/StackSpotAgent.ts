@@ -59,6 +59,11 @@ export class StackSpotAgent {
   private async authenticate(): Promise<string> {
     const authUrl = `https://idm.stackspot.com/${this.config.realm}/oidc/oauth/token`;
     
+    console.log('🔐 StackSpotAgent: URL de autenticação:', authUrl);
+    console.log('🔐 StackSpotAgent: Realm:', this.config.realm);
+    console.log('🔐 StackSpotAgent: Client ID:', this.config.clientId);
+    console.log('🔐 StackSpotAgent: Client Key:', this.config.clientKey ? '***' + this.config.clientKey.slice(-4) : 'NÃO CONFIGURADO');
+    
     const formData = new URLSearchParams();
     formData.append('grant_type', 'client_credentials');
     formData.append('client_id', this.config.clientId);
@@ -73,15 +78,20 @@ export class StackSpotAgent {
     });
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      console.error('❌ StackSpotAgent: Erro de autenticação:', response.status, response.statusText);
+      console.error('❌ StackSpotAgent: Resposta do erro:', errorText);
       throw new Error(`Falha na autenticação: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json() as any;
     
     if (!data.access_token) {
+      console.error('❌ StackSpotAgent: Resposta da autenticação:', data);
       throw new Error('Token de acesso não encontrado na resposta');
     }
 
+    console.log('✅ StackSpotAgent: Token obtido com sucesso');
     return data.access_token;
   }
 

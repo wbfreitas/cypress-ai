@@ -9,6 +9,18 @@ export declare class TestGenerator {
      */
     generateTest(options: GenerateTestOptions, config?: CypressAiConfig): Promise<boolean>;
     /**
+     * Gera teste com sistema de retry automático
+     */
+    private generateTestWithRetry;
+    /**
+     * Testa o código gerado executando-o
+     */
+    private testGeneratedCode;
+    /**
+     * Constrói prompt de correção com feedback do erro
+     */
+    private buildCorrectionPrompt;
+    /**
      * Executa um teste se ele existir
      */
     runTestIfExists(options: RunTestOptions): Promise<RunTestResult>;

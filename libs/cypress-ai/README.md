@@ -8,6 +8,7 @@ Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama ou 
 - **Arquitetura Orientada a Objetos**: Código bem estruturado e fácil de manter
 - **Execução de Testes Finais**: Executa testes gerados e permite substituição do teste AI
 - **Múltiplos Agentes de IA**: Suporte ao Ollama (local) e StackSpot (cloud)
+- **Retry Automático**: Sistema inteligente de auto-correção com feedback de erros
 - **TypeScript**: Tipagem completa e IntelliSense
 - **CLI Global**: Comando `cyai` para uso em qualquer projeto
 - **Playground Automatizado**: Ambiente de desenvolvimento completo
@@ -134,6 +135,10 @@ CYPRESS_AI_PORT=4200
 CYPRESS_AI_DIR=cypress/e2e-ai
 CYPRESS_FINAL_DIR=cypress/e2e-final
 
+# Auto-Retry Configuration
+CYPRESS_AI_AUTO_RETRY=true
+CYPRESS_AI_MAX_RETRIES=3
+
 # Ollama Configuration (se AI_AGENT=ollama)
 AI_OLLAMA_BASE_URL=http://localhost:11434
 AI_OLLAMA_MODEL=qwen2.5-coder:latest
@@ -159,6 +164,8 @@ STACKSPOT_BASE_URL=https://genai-inference-app.stackspot.com
 | `CYPRESS_AI_PORT` | Porta da aplicação Angular | `4200` |
 | `CYPRESS_AI_DIR` | Diretório dos testes AI | `cypress/e2e-ai` |
 | `CYPRESS_FINAL_DIR` | Diretório dos testes finais | `cypress/e2e-final` |
+| `CYPRESS_AI_AUTO_RETRY` | Habilitar retry automático | `true` |
+| `CYPRESS_AI_MAX_RETRIES` | Número máximo de tentativas | `3` |
 
 #### Ollama (se AI_AGENT=ollama)
 | Variável | Descrição | Padrão |
@@ -174,6 +181,51 @@ STACKSPOT_BASE_URL=https://genai-inference-app.stackspot.com
 | `STACKSPOT_CLIENT_KEY` | Client Key do StackSpot | - |
 | `STACKSPOT_AGENT_ID` | Agent ID do StackSpot | - |
 | `STACKSPOT_BASE_URL` | URL base do StackSpot | `https://genai-inference-app.stackspot.com` |
+
+## 🔄 Sistema de Retry Automático
+
+O Cypress AI inclui um sistema inteligente de retry automático que tenta auto-corrigir testes que falham:
+
+### Como Funciona
+
+1. **Geração Inicial**: A IA gera o teste baseado nas instruções
+2. **Validação**: O teste é executado automaticamente para verificar se funciona
+3. **Auto-Correção**: Se falhar, o erro é enviado de volta para a IA junto com:
+   - Instruções originais
+   - Código que falhou
+   - Mensagem de erro detalhada
+   - HTML da página
+4. **Retry**: A IA tenta corrigir o código e o processo se repete
+
+### Configuração
+
+```env
+# Habilitar/desabilitar retry automático
+CYPRESS_AI_AUTO_RETRY=true
+
+# Número máximo de tentativas (padrão: 3)
+CYPRESS_AI_MAX_RETRIES=3
+```
+
+### Tipos de Erros Corrigidos Automaticamente
+
+- ✅ **Sintaxe incorreta**: Comandos Cypress malformados
+- ✅ **Seletores inválidos**: CSS selectors que não existem na página
+- ✅ **Timing issues**: Problemas de sincronização
+- ✅ **Lógica inadequada**: Fluxos de teste incorretos
+- ✅ **Comandos incorretos**: Uso inadequado da API do Cypress
+
+### Logs do Sistema
+
+```
+🔄 Sistema de retry automático habilitado (máximo 3 tentativas)
+🔄 Tentativa 1/3 de geração do teste
+🧪 Testando o código gerado...
+❌ Teste falhou na tentativa 1: Element not found
+🔄 Tentando auto-correção...
+🔄 Tentativa 2/3 de geração do teste
+✅ Teste gerado e validado com sucesso!
+```
 
 ## 🎮 CLI Global
 

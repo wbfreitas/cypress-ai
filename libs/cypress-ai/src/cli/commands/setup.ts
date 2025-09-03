@@ -211,6 +211,10 @@ CYPRESS_AI_PORT=${this.options.port}
 CYPRESS_AI_DIR=${this.options.aiDir}
 CYPRESS_FINAL_DIR=${this.options.finalDir}
 
+# Auto-Retry Configuration
+CYPRESS_AI_AUTO_RETRY=true
+CYPRESS_AI_MAX_RETRIES=3
+
 `;
 
     // Adicionar configurações específicas do agente

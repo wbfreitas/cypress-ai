@@ -46,19 +46,171 @@ export class TestGenerator {
     
     console.log('✅ Agente criado:', selectedAgent);
     
-    // Constrói o prompt
-    const prompt = this.promptBuilder.buildPrompt(instructions, existingTest, html);
+    // Constrói o prompt inicial
+    const initialPrompt = this.promptBuilder.buildPrompt(instructions, existingTest, html);
     
-    // Gera o código usando a IA
-    const generatedCode = await aiAgent.generateTest(prompt, model);
+    // Verifica se o retry automático está habilitado
+    const autoRetryEnabled = process.env['CYPRESS_AI_AUTO_RETRY'] !== 'false';
     
-    // Limpa o código gerado
-    const cleanCode = this.promptBuilder.cleanGeneratedCode(generatedCode);
+    if (autoRetryEnabled) {
+      // Tenta gerar o teste com retry automático
+      const maxRetries = parseInt(process.env['CYPRESS_AI_MAX_RETRIES'] || '3');
+      console.log(`🔄 Sistema de retry automático habilitado (máximo ${maxRetries} tentativas)`);
+      return await this.generateTestWithRetry(aiAgent, initialPrompt, instructions, existingTest, html, absPath, maxRetries);
+    } else {
+      // Geração simples sem retry
+      console.log('⚡ Modo simples - sem retry automático');
+      const generatedCode = await aiAgent.generateTest(initialPrompt, undefined);
+      const cleanCode = this.promptBuilder.cleanGeneratedCode(generatedCode);
+      this.fileManager.writeFile(absPath, cleanCode);
+      return true;
+    }
+  }
+
+  /**
+   * Gera teste com sistema de retry automático
+   */
+  private async generateTestWithRetry(
+    aiAgent: IAgent,
+    prompt: string,
+    originalInstructions: string | string[],
+    existingTest: string | null,
+    html: string,
+    absPath: string,
+    maxRetries: number
+  ): Promise<boolean> {
+    let attempt = 1;
+    let lastError: string | null = null;
+    let lastGeneratedCode: string | null = null;
+
+    while (attempt <= maxRetries) {
+      try {
+        console.log(`🔄 Tentativa ${attempt}/${maxRetries} de geração do teste`);
+        
+        // Gera o código usando a IA
+        const generatedCode = await aiAgent.generateTest(prompt, undefined);
+        lastGeneratedCode = generatedCode;
+        
+        // Limpa o código gerado
+        const cleanCode = this.promptBuilder.cleanGeneratedCode(generatedCode);
+        
+        // Salva o arquivo
+        this.fileManager.writeFile(absPath, cleanCode);
+        
+        // Tenta executar o teste para verificar se está funcionando
+        console.log('🧪 Testando o código gerado...');
+        const testResult = await this.testGeneratedCode(absPath);
+        
+        if (testResult.success) {
+          console.log('✅ Teste gerado e validado com sucesso!');
+          return true;
+        } else {
+          lastError = testResult.error || 'Erro desconhecido na execução do teste';
+          console.log(`❌ Teste falhou na tentativa ${attempt}:`, lastError);
+          
+          if (attempt < maxRetries) {
+            console.log('🔄 Tentando auto-correção...');
+            // Constrói prompt de correção com feedback do erro
+            prompt = this.buildCorrectionPrompt(originalInstructions, existingTest, html, lastError || '', lastGeneratedCode || '');
+          }
+        }
+        
+      } catch (error: any) {
+        lastError = error.message;
+        console.log(`❌ Erro na tentativa ${attempt}:`, lastError);
+        
+        if (attempt < maxRetries) {
+          console.log('🔄 Tentando auto-correção...');
+          // Constrói prompt de correção com feedback do erro
+          prompt = this.buildCorrectionPrompt(originalInstructions, existingTest, html, lastError || '', lastGeneratedCode || '');
+        }
+      }
+      
+      attempt++;
+    }
     
-    // Salva o arquivo
-    this.fileManager.writeFile(absPath, cleanCode);
-    
-    return true;
+    console.log(`❌ Falha após ${maxRetries} tentativas. Último erro:`, lastError);
+    return false;
+  }
+
+  /**
+   * Testa o código gerado executando-o
+   */
+  private async testGeneratedCode(specPath: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const result = await this.cypressRunner.runTestIfExists({
+        specPath,
+        baseUrl: process.env['CYPRESS_AI_BASE_URL'] || 'http://localhost:4200'
+      });
+      
+      if (!result.ran) {
+        return {
+          success: false,
+          error: result.error || 'Teste não pôde ser executado'
+        };
+      }
+      
+      const errorMessage = result.status !== 0 ? (result.stderr || result.stdout || 'Erro desconhecido') : undefined;
+      return {
+        success: result.status === 0,
+        ...(errorMessage && { error: errorMessage })
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Constrói prompt de correção com feedback do erro
+   */
+  private buildCorrectionPrompt(
+    originalInstructions: string | string[],
+    existingTest: string | null,
+    html: string,
+    error: string,
+    generatedCode: string | null
+  ): string {
+    const instructions = Array.isArray(originalInstructions) 
+      ? originalInstructions.join('\n') 
+      : originalInstructions;
+
+    let correctionPrompt = `ERRO DETECTADO - AUTO-CORREÇÃO NECESSÁRIA
+
+INSTRUÇÕES ORIGINAIS:
+${instructions}
+
+CÓDIGO GERADO QUE FALHOU:
+\`\`\`javascript
+${generatedCode || 'Nenhum código foi gerado'}
+\`\`\`
+
+ERRO ENCONTRADO:
+${error}
+
+HTML DA PÁGINA:
+\`\`\`html
+${html}
+\`\`\`
+
+${existingTest ? `TESTE EXISTENTE (para referência):
+\`\`\`javascript
+${existingTest}
+\`\`\`` : ''}
+
+TAREFA:
+Analise o erro acima e corrija o código do teste. O erro pode ser:
+- Sintaxe incorreta
+- Seletor CSS inválido
+- Comando Cypress incorreto
+- Lógica de teste inadequada
+- Timing issues
+
+Gere um novo código de teste corrigido que resolva o erro identificado.`;
+
+    return correctionPrompt;
   }
 
   /**
