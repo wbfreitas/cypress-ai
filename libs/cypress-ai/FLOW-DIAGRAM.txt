@@ -1,0 +1,249 @@
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CYPRESS AI - FLUXO COMPLETO                      │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐
+│   Cypress Test  │
+│                 │
+│ cy.prompt([     │
+│   "instrução1", │
+│   "instrução2"  │
+│ ])              │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│  TestGenerator  │
+│                 │
+│ 1. Captura HTML │
+│ 2. Lê código    │
+│    existente    │
+│ 3. Determina    │
+│    agente       │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ PromptBuilder   │
+│                 │
+│ Combina:        │
+│ - Instruções    │
+│ - Código exist. │
+│ - HTML página   │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│  AgentFactory   │
+│                 │
+│ Cria agente:    │
+│ - Ollama        │
+│ - StackSpot     │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   AI Agent      │
+│                 │
+│ Ollama:         │
+│ POST /api/      │
+│ generate        │
+│                 │
+│ StackSpot:      │
+│ 1. Auth JWT     │
+│ 2. Chat API     │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ Código Gerado   │
+│                 │
+│ describe('...', │
+│ () => {         │
+│   cy.visit()    │
+│   cy.get()      │
+│   cy.click()    │
+│ })              │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│  FileManager    │
+│                 │
+│ 1. Limpa código │
+│ 2. Salva arquivo│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ CypressRunner   │
+│                 │
+│ Executa:        │
+│ npx cypress run │
+│ --spec file.cy.js│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   Resultado     │
+│                 │
+│ Status Code:    │
+│ - 0 = Sucesso   │
+│ - 1 = Erro      │
+└─────────┬───────┘
+          │
+          ▼
+    ┌─────────┐
+    │ Sucesso?│
+    └────┬────┘
+         │
+    ┌────▼────┐
+    │   SIM   │
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│ ✅ Teste OK     │
+│                 │
+│ Processo        │
+│ finalizado      │
+└─────────────────┘
+
+    ┌────▼────┐
+    │   NÃO   │
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│  Auto-Retry     │
+│                 │
+│ Tentativa 1/3   │
+│ - Detecta erro  │
+│ - Build feedback│
+│ - Tenta novamente│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ BuildCorrection │
+│                 │
+│ Prompt com:     │
+│ - Erro original │
+│ - Código falhou │
+│ - Instruções    │
+│ - HTML página   │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   AI Agent      │
+│                 │
+│ Recebe feedback │
+│ e tenta corrigir│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ Código Corrigido│
+│                 │
+│ Nova versão     │
+│ do teste        │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│ CypressRunner   │
+│                 │
+│ Executa teste   │
+│ corrigido       │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   Resultado     │
+│                 │
+│ Status Code:    │
+│ - 0 = Sucesso   │
+│ - 1 = Erro      │
+└─────────┬───────┘
+          │
+          ▼
+    ┌─────────┐
+    │ Sucesso?│
+    └────┬────┘
+         │
+    ┌────▼────┐
+    │   SIM   │
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│ ✅ Teste OK     │
+│                 │
+│ Após correção   │
+│ automática      │
+└─────────────────┘
+
+    ┌────▼────┐
+    │   NÃO   │
+    └────┬────┘
+         │
+         ▼
+┌─────────────────┐
+│  Auto-Retry     │
+│                 │
+│ Tentativa 2/3   │
+│ - Mais contexto │
+│ - Tenta novamente│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│  Auto-Retry     │
+│                 │
+│ Tentativa 3/3   │
+│ - Última chance │
+│ - Máximo contexto│
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   Resultado     │
+│                 │
+│ Final:          │
+│ - Sucesso ✅    │
+│ - Falha ❌      │
+└─────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              CONFIGURAÇÃO                                     │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐
+│   Arquivo .env  │
+│                 │
+│ AI_AGENT=ollama │
+│ AI_OLLAMA_MODEL=│
+│ qwen2.5-coder   │
+│                 │
+│ CYPRESS_AI_     │
+│ AUTO_RETRY=true │
+│ CYPRESS_AI_     │
+│ MAX_RETRIES=3   │
+└─────────────────┘
+
+┌─────────────────┐
+│  cypress.config │
+│                 │
+│ setupNodeEvents │
+│ installCypress  │
+│ AiPlugin        │
+└─────────────────┘
+
+┌─────────────────┐
+│  package.json   │
+│                 │
+│ Scripts:        │
+│ - cy:ai:run     │
+│ - cy:final      │
+└─────────────────┘
