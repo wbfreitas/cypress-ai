@@ -237,8 +237,6 @@ describe('Formulário de Login', () => {
 10. Se erro: Feedback para IA + Retry
 ```
 
-## Vantagens da Arquitetura
-
 - **Modular**: Cada componente tem responsabilidade única
 - **Extensível**: Fácil adicionar novos agentes de IA
 - **Robusto**: Sistema de retry automático
