@@ -2,7 +2,7 @@
 **node_modules**
 
 # Build e distribuição
-/dist
+./**/dist
 /aot
 /out-tsc
 
@@ -20,7 +20,10 @@
 /.idea
 *.swp
 *.swo
+*.map
 *~
+*.env
+*.gitkeep
 
 # Sistema operacional
 .DS_Store

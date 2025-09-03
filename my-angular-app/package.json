@@ -9,8 +9,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "cy:ai:run": "cypress run --e2e --config baseUrl=http://localhost:4200",
-    "cy:final": "cypress open --e2e --config specPattern='cypress/e2e-final/**/*.cy.{js,ts}',baseUrl=http://localhost:4200"
-},
+    "cy:final": "cypress open --e2e --config specPattern='cypress/e2e-final/**/*.cy.{js,ts}',baseUrl=http://localhost:4200",
+    "cy:ai:setup": "cyai setup"
+  },
   "dependencies": {
     "@angular/animations": "~15.2.0",
     "@angular/common": "~15.2.0",
@@ -31,8 +32,10 @@
     "@testing-library/cypress": "^10.0.3",
     "@types/jasmine": "~4.3.0",
     "@types/node": "^16.18.0",
+    "chokidar": "^3.6.0",
     "cypress": "^12.17.4",
     "cypress-ai": "file:../libs/cypress-ai",
+    "dotenv": "^17.2.2",
     "typescript": "^4.9.5"
   }
 }
