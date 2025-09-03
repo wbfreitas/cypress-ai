@@ -1,6 +1,16 @@
 // libs/cypress-ai/src/agent.ts
 import { CypressAiPlugin } from './plugin/CypressAiPlugin';
 import { CypressAiConfig } from './types';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// Carregar arquivo .env se existir
+const envPath = path.join(process.cwd(), '.env');
+try {
+  dotenv.config({ path: envPath });
+} catch (error) {
+  // Ignorar erro se arquivo .env não existir
+}
 
 /**
  * Instala o plugin Cypress AI
@@ -14,7 +24,14 @@ export function installCypressAiPlugin(
   config: any, 
   defaults: CypressAiConfig = {}
 ): any {
-  const plugin = new CypressAiPlugin(defaults);
+  // Usar variáveis de ambiente se disponíveis
+  const envConfig: CypressAiConfig = {
+    model: process.env['AI_OLLAMA_MODEL'] || defaults.model || 'qwen2.5-coder:latest',
+    baseUrl: process.env['AI_OLLAMA_BASE_URL'] || defaults.baseUrl || 'http://localhost:11434',
+    ...defaults
+  };
+  
+  const plugin = new CypressAiPlugin(envConfig);
   return plugin.installPlugin(on, config);
 }
 

@@ -1,6 +1,16 @@
 // libs/cypress-ai/src/plugin/CypressAiPlugin.ts
 import { TestGenerator } from '../core/TestGenerator';
 import { GenerateTestOptions, RunTestOptions, CypressAiConfig } from '../types';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+// Carregar arquivo .env se existir
+const envPath = path.join(process.cwd(), '.env');
+try {
+  dotenv.config({ path: envPath });
+} catch (error) {
+  // Ignorar erro se arquivo .env não existir
+}
 
 export class CypressAiPlugin {
   private testGenerator: TestGenerator;
@@ -8,7 +18,13 @@ export class CypressAiPlugin {
 
   constructor(config: CypressAiConfig = {}) {
     this.testGenerator = new TestGenerator();
-    this.config = config;
+    this.config = {
+      // Prioridade: .env > config > padrão
+      agent: (process.env['AI_AGENT'] as 'ollama' | 'stackspot') || config.agent || 'ollama',
+      model: process.env['AI_OLLAMA_MODEL'] || config.model || 'qwen2.5-coder:latest',
+      baseUrl: process.env['AI_OLLAMA_BASE_URL'] || config.baseUrl || 'http://localhost:11434',
+      ...config
+    };
   }
 
   /**

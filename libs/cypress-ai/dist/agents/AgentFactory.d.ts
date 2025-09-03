@@ -7,7 +7,7 @@ export declare class AgentFactory {
     /**
      * Cria uma instância do agente baseado na configuração
      */
-    static createAgent(agentType: 'ollama', config: CypressAiConfig): IAgent;
+    static createAgent(agentType: 'ollama' | 'stackspot', config: CypressAiConfig): IAgent;
     /**
      * Lista os agentes disponíveis
      */

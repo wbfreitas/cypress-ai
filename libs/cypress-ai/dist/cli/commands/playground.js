@@ -38,6 +38,15 @@ const child_process_1 = require("child_process");
 const chokidar = __importStar(require("chokidar"));
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
+const dotenv = __importStar(require("dotenv"));
+// Carregar arquivo .env se existir
+const envPath = path.join(process.cwd(), '.env');
+try {
+    dotenv.config({ path: envPath });
+}
+catch (error) {
+    // Ignorar erro se arquivo .env não existir
+}
 class PlaygroundCommand {
     constructor() {
         this.angularProcess = null;
@@ -50,7 +59,7 @@ class PlaygroundCommand {
     }
     async run(options = {}) {
         this.options = {
-            port: '4200',
+            port: process.env['CYPRESS_AI_PORT'] || '4200',
             cypressFinal: true,
             watch: true,
             ...options
@@ -242,6 +251,15 @@ class PlaygroundCommand {
         }
         console.log(`\n🔄 Arquivo ${action}: ${relativePath}`);
         console.log(`🚀 Executando teste: ${fileName}`);
+        // Mostrar qual agente está sendo usado
+        const selectedAgent = process.env['AI_AGENT'] || 'ollama';
+        console.log(`🤖 Agente configurado: ${selectedAgent}`);
+        if (selectedAgent === 'stackspot') {
+            console.log(`☁️  Usando StackSpot (Cloud)`);
+        }
+        else {
+            console.log(`🦙 Usando Ollama (Local)`);
+        }
         this.runningTests.add(fileName);
         try {
             await this.runCypressTest(filePath);
@@ -280,6 +298,15 @@ class PlaygroundCommand {
             cypressProcess.on('close', (code) => {
                 if (code === 0) {
                     console.log(`✅ Teste executado com sucesso!`);
+                    // Mostrar qual agente foi usado
+                    const selectedAgent = process.env['AI_AGENT'] || 'ollama';
+                    console.log(`🤖 Agente usado: ${selectedAgent}`);
+                    if (selectedAgent === 'stackspot') {
+                        console.log(`☁️  StackSpot (Cloud) foi usado para gerar o teste`);
+                    }
+                    else {
+                        console.log(`🦙 Ollama (Local) foi usado para gerar o teste`);
+                    }
                 }
                 else {
                     console.log(`❌ Teste falhou (código: ${code})`);

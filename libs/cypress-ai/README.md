@@ -1,31 +1,44 @@
 # Cypress AI - Biblioteca TypeScript
 
-Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama) com arquitetura orientada a objetos.
+Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama ou StackSpot) com arquitetura orientada a objetos.
 
 ## 🚀 Funcionalidades
 
 - **Geração de Testes com IA**: Gera testes Cypress automaticamente baseado em instruções em português
 - **Arquitetura Orientada a Objetos**: Código bem estruturado e fácil de manter
 - **Execução de Testes Finais**: Executa testes gerados e permite substituição do teste AI
-- **Suporte ao Ollama**: Integração com modelos de IA locais
+- **Múltiplos Agentes de IA**: Suporte ao Ollama (local) e StackSpot (cloud)
 - **TypeScript**: Tipagem completa e IntelliSense
 - **CLI Global**: Comando `cyai` para uso em qualquer projeto
 - **Playground Automatizado**: Ambiente de desenvolvimento completo
 
 ## 📦 Instalação
 
-### Instalação Local (Biblioteca)
-```bash
-npm install cypress-ai
-```
-
-### Instalação Global (CLI)
+### Instalação Global (CLI) - Recomendado
 ```bash
 # Instalar globalmente
 npm install -g cypress-ai
 
-# Ou usar diretamente com npx
+# Configurar projeto Angular
+cd meu-projeto-angular
+cyai setup
+
+# Iniciar desenvolvimento
+cyai playground
+```
+
+### Uso com npx (sem instalação)
+```bash
+# Configurar projeto
+npx cypress-ai setup
+
+# Iniciar playground
 npx cypress-ai playground
+```
+
+### Instalação Local (Biblioteca)
+```bash
+npm install cypress-ai
 ```
 
 ### Instalação Manual (Desenvolvimento)
@@ -37,9 +50,40 @@ npm run build
 npm install -g .
 ```
 
-## ⚙️ Configuração
+## ⚙️ Configuração Automática
 
-### 1. Configurar o Cypress
+### Comando `cyai setup`
+
+O comando setup automatiza toda a configuração:
+
+```bash
+# Configuração básica (modo interativo)
+cyai setup
+
+# Configuração com StackSpot
+cyai setup --agent stackspot
+
+# Configuração com Ollama e modelo específico
+cyai setup --agent ollama --model llama2 --port 3000
+```
+
+**O que o setup faz:**
+- ✅ Cria arquivo `.env` com configurações LLM
+- ✅ Configura `cypress.config.ts` automaticamente
+- ✅ Cria `cypress/support/e2e.ts` se não existir
+- ✅ Cria diretórios `cypress/e2e-ai/` e `cypress/e2e-final/`
+- ✅ Atualiza `package.json` com scripts necessários
+- ✅ Instala dependências automaticamente (incluindo `dotenv`)
+
+**Integração com .env:**
+A lib carrega automaticamente o arquivo `.env` e usa as variáveis para configuração:
+- `AI_OLLAMA_MODEL`: Modelo do Ollama
+- `AI_OLLAMA_BASE_URL`: URL base do Ollama
+- `CYPRESS_AI_PORT`: Porta da aplicação Angular
+- `CYPRESS_AI_DIR`: Diretório dos testes AI
+- `CYPRESS_FINAL_DIR`: Diretório dos testes finais
+
+### Configuração Manual (se necessário)
 
 ```typescript
 // cypress.config.ts
@@ -50,18 +94,21 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:4200',
     supportFile: 'cypress/support/e2e.ts',
-    specPattern: 'cypress/e2e-ai/**/*.cy.{js,ts}',
+    specPattern: [
+      'cypress/e2e-ai/**/*.cy.{js,ts}',
+      'cypress/e2e-final/**/*.cy.{js,ts}'
+    ],
     setupNodeEvents(on, config) {
+      // A lib carrega automaticamente o arquivo .env
       return installCypressAiPlugin(on, config, { 
-        model: 'qwen2.5-coder:latest' 
+        model: process.env.AI_OLLAMA_MODEL || 'qwen2.5-coder:latest',
+        baseUrl: process.env.AI_OLLAMA_BASE_URL || 'http://localhost:11434'
       })
     },
     video: false
   }
 })
 ```
-
-### 2. Registrar Comandos
 
 ```typescript
 // cypress/support/e2e.ts
@@ -70,6 +117,64 @@ require('cypress-ai/dist/commands').registerSupportCommands()
 export {}
 ```
 
+## 🔧 Arquivo .env
+
+A lib carrega automaticamente o arquivo `.env` para configuração. Você pode personalizar as configurações editando este arquivo:
+
+```env
+# Cypress AI Configuration
+# Agent Configuration
+AI_AGENT=ollama
+
+# Project Configuration
+CYPRESS_AI_BASE_URL=http://localhost:4200
+CYPRESS_AI_PORT=4200
+
+# Directory Configuration
+CYPRESS_AI_DIR=cypress/e2e-ai
+CYPRESS_FINAL_DIR=cypress/e2e-final
+
+# Ollama Configuration (se AI_AGENT=ollama)
+AI_OLLAMA_BASE_URL=http://localhost:11434
+AI_OLLAMA_MODEL=qwen2.5-coder:latest
+
+# StackSpot Configuration (se AI_AGENT=stackspot)
+STACKSPOT_REALM=seu-realm
+STACKSPOT_CLIENT_ID=seu-client-id
+STACKSPOT_CLIENT_KEY=seu-client-key
+STACKSPOT_AGENT_ID=seu-agent-id
+STACKSPOT_BASE_URL=https://genai-inference-app.stackspot.com
+
+# Optional: Custom prompts
+# CYPRESS_AI_SYSTEM_PROMPT=Você é um especialista em testes E2E com Cypress.
+```
+
+### Variáveis Disponíveis
+
+#### Configuração Geral
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `AI_AGENT` | Agente de IA a usar (ollama ou stackspot) | `ollama` |
+| `CYPRESS_AI_BASE_URL` | URL base da aplicação | `http://localhost:4200` |
+| `CYPRESS_AI_PORT` | Porta da aplicação Angular | `4200` |
+| `CYPRESS_AI_DIR` | Diretório dos testes AI | `cypress/e2e-ai` |
+| `CYPRESS_FINAL_DIR` | Diretório dos testes finais | `cypress/e2e-final` |
+
+#### Ollama (se AI_AGENT=ollama)
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `AI_OLLAMA_MODEL` | Modelo do Ollama a usar | `qwen2.5-coder:latest` |
+| `AI_OLLAMA_BASE_URL` | URL base do Ollama | `http://localhost:11434` |
+
+#### StackSpot (se AI_AGENT=stackspot)
+| Variável | Descrição | Padrão |
+|----------|-----------|--------|
+| `STACKSPOT_REALM` | Realm do StackSpot | - |
+| `STACKSPOT_CLIENT_ID` | Client ID do StackSpot | - |
+| `STACKSPOT_CLIENT_KEY` | Client Key do StackSpot | - |
+| `STACKSPOT_AGENT_ID` | Agent ID do StackSpot | - |
+| `STACKSPOT_BASE_URL` | URL base do StackSpot | `https://genai-inference-app.stackspot.com` |
+
 ## 🎮 CLI Global
 
 ### Comando `cyai`
@@ -77,6 +182,12 @@ export {}
 O Cypress AI inclui um CLI global que pode ser usado em qualquer projeto:
 
 ```bash
+# Configurar projeto
+cyai setup
+
+# Executar testes
+cyai run
+
 # Iniciar o playground
 cyai playground
 
@@ -90,8 +201,27 @@ cyai help
 cyai version
 ```
 
-### Opções do Playground
+### Opções dos Comandos
 
+#### Setup
+| Opção | Descrição | Padrão |
+|-------|-----------|--------|
+| `-m, --model <model>` | Modelo do Ollama | `qwen2.5-coder:latest` |
+| `-u, --base-url <url>` | URL base da aplicação | `http://localhost:4200` |
+| `-p, --port <port>` | Porta da aplicação Angular | `4200` |
+| `--ai-dir <dir>` | Diretório dos testes AI | `cypress/e2e-ai` |
+| `--final-dir <dir>` | Diretório dos testes finais | `cypress/e2e-final` |
+| `-f, --force` | Sobrescrever arquivos existentes | `false` |
+
+#### Run
+| Opção | Descrição | Padrão |
+|-------|-----------|--------|
+| `-s, --spec <spec>` | Arquivo de teste específico | Todos |
+| `-p, --port <port>` | Porta da aplicação Angular | `4200` |
+| `--no-headless` | Executar em modo interativo | `false` |
+| `-b, --browser <browser>` | Navegador para usar | `chrome` |
+
+#### Playground
 | Opção | Descrição | Padrão |
 |-------|-----------|--------|
 | `-p, --port <port>` | Porta da aplicação Angular | `4200` |

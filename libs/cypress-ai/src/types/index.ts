@@ -3,14 +3,15 @@
 export interface CypressAiConfig {
   model?: string;
   apiBase?: string;
-  agent?: 'ollama';
+  baseUrl?: string;
+  agent?: 'ollama' | 'stackspot';
 }
 
 export interface GenerateTestOptions {
   instructions: string | string[];
   html: string;
   specPath: string;
-  agent?: 'ollama';
+  agent?: 'ollama' | 'stackspot';
   model?: string;
 }
 
@@ -29,7 +30,7 @@ export interface RunTestResult {
 
 export interface AiCommandOptions {
   finalDir?: string;
-  agent?: 'ollama';
+  agent?: 'ollama' | 'stackspot';
   model?: string;
   runExisting?: boolean;
   stopOnExistingFailure?: boolean;

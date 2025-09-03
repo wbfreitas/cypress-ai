@@ -20,7 +20,7 @@ export class TestGenerator {
    * Gera um teste baseado nas instruções fornecidas
    */
   async generateTest(options: GenerateTestOptions, config: CypressAiConfig = {}): Promise<boolean> {
-    const { instructions, html, specPath, agent = 'ollama', model } = options;
+    const { instructions, html, specPath, agent, model } = options;
     
     // Resolve o caminho absoluto
     const absPath = this.fileManager.resolvePath(specPath);
@@ -28,9 +28,23 @@ export class TestGenerator {
     // Lê o teste existente se houver
     const existingTest = this.fileManager.readFileIfExists(absPath);
     
+    // Determina o agente a usar (prioridade: parâmetro > .env > padrão)
+    const selectedAgent = agent || process.env['AI_AGENT'] || 'ollama';
+    
+    console.log('🤖 Agente selecionado:', selectedAgent);
+    console.log('🔧 Configuração do agente:', {
+      agent: selectedAgent,
+      model: model || config.model || process.env['AI_OLLAMA_MODEL'],
+      stackspotRealm: process.env['STACKSPOT_REALM'],
+      stackspotClientId: process.env['STACKSPOT_CLIENT_ID'],
+      stackspotAgentId: process.env['STACKSPOT_AGENT_ID']
+    });
+    
     // Cria o agente
-    const finalModel = model || config.model || 'qwen2.5-coder:latest';
-    const aiAgent: IAgent = AgentFactory.createAgent(agent, { ...config, model: finalModel });
+    const finalModel = model || config.model || process.env['AI_OLLAMA_MODEL'] || 'qwen2.5-coder:latest';
+    const aiAgent: IAgent = AgentFactory.createAgent(selectedAgent as 'ollama' | 'stackspot', { ...config, model: finalModel });
+    
+    console.log('✅ Agente criado:', selectedAgent);
     
     // Constrói o prompt
     const prompt = this.promptBuilder.buildPrompt(instructions, existingTest, html);

@@ -2,6 +2,15 @@ import { spawn, exec } from 'child_process';
 import * as chokidar from 'chokidar';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as dotenv from 'dotenv';
+
+// Carregar arquivo .env se existir
+const envPath = path.join(process.cwd(), '.env');
+try {
+  dotenv.config({ path: envPath });
+} catch (error) {
+  // Ignorar erro se arquivo .env não existir
+}
 
 export interface PlaygroundOptions {
   port?: string;
@@ -24,7 +33,7 @@ export class PlaygroundCommand {
 
   async run(options: PlaygroundOptions = {}) {
     this.options = {
-      port: '4200',
+      port: process.env['CYPRESS_AI_PORT'] || '4200',
       cypressFinal: true,
       watch: true,
       ...options
@@ -247,6 +256,15 @@ export class PlaygroundCommand {
     console.log(`\n🔄 Arquivo ${action}: ${relativePath}`);
     console.log(`🚀 Executando teste: ${fileName}`);
     
+    // Mostrar qual agente está sendo usado
+    const selectedAgent = process.env['AI_AGENT'] || 'ollama';
+    console.log(`🤖 Agente configurado: ${selectedAgent}`);
+    if (selectedAgent === 'stackspot') {
+      console.log(`☁️  Usando StackSpot (Cloud)`);
+    } else {
+      console.log(`🦙 Usando Ollama (Local)`);
+    }
+    
     this.runningTests.add(fileName);
     
     try {
@@ -290,6 +308,15 @@ export class PlaygroundCommand {
       cypressProcess.on('close', (code: number) => {
         if (code === 0) {
           console.log(`✅ Teste executado com sucesso!`);
+          
+          // Mostrar qual agente foi usado
+          const selectedAgent = process.env['AI_AGENT'] || 'ollama';
+          console.log(`🤖 Agente usado: ${selectedAgent}`);
+          if (selectedAgent === 'stackspot') {
+            console.log(`☁️  StackSpot (Cloud) foi usado para gerar o teste`);
+          } else {
+            console.log(`🦙 Ollama (Local) foi usado para gerar o teste`);
+          }
         } else {
           console.log(`❌ Teste falhou (código: ${code})`);
           hasError = true;

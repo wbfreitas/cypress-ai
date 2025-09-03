@@ -12,48 +12,16 @@ npm install -g cypress-ai
 # Navegar para seu projeto
 cd meu-projeto-angular
 
-# Instalar dependências
-npm install cypress cypress-ai
-
-# Configurar Cypress
-npx cypress open
+# Configurar automaticamente
+cyai setup
 ```
 
-### 3. Configurar cypress.config.ts
-```typescript
-import { defineConfig } from 'cypress'
-const { installCypressAiPlugin } = require('cypress-ai/dist/agent')
-
-export default defineConfig({
-  e2e: {
-    baseUrl: 'http://localhost:4200',
-    supportFile: 'cypress/support/e2e.ts',
-    specPattern: [
-      'cypress/e2e-ai/**/*.cy.{js,ts}',
-      'cypress/e2e-final/**/*.cy.{js,ts}'
-    ],
-    setupNodeEvents(on, config) {
-      return installCypressAiPlugin(on, config, { 
-        model: 'qwen2.5-coder:latest' 
-      })
-    }
-  }
-})
-```
-
-### 4. Configurar cypress/support/e2e.ts
-```typescript
-import '@testing-library/cypress/add-commands'
-require('cypress-ai/dist/commands').registerSupportCommands()
-export {}
-```
-
-### 5. Iniciar o Playground
+### 3. Iniciar o Playground
 ```bash
 cyai playground
 ```
 
-### 6. Criar Primeiro Teste
+### 4. Criar Primeiro Teste
 ```javascript
 // cypress/e2e-ai/login.cy.js
 describe('Login', () => {
@@ -83,6 +51,12 @@ describe('Login', () => {
 ## 🔧 Comandos Úteis
 
 ```bash
+# Configurar projeto
+cyai setup
+
+# Executar testes
+cyai run
+
 # Ver ajuda
 cyai help
 
@@ -92,8 +66,8 @@ cyai version
 # Playground com opções
 cyai playground --port 3000 --no-cypress-final
 
-# Executar diretamente (sem playground)
-node ../libs/cypress-ai/dist/cli/index.js playground
+# Executar teste específico
+cyai run --spec cypress/e2e-ai/login.cy.js
 ```
 
 ## 🎨 Exemplos Avançados

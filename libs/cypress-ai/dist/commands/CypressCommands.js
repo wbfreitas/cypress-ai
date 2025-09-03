@@ -10,8 +10,9 @@ class CypressCommands {
             .replace(/\.cy\.(ts|js)$/i, '.cy.js');
         const finalDir = options.finalDir || 'cypress/e2e-final';
         const specPath = `${finalDir}/${specName}`;
-        const agent = options.agent || 'ollama';
-        const model = options.model || 'qwen2.5-coder:latest';
+        // Não definir agente padrão aqui - deixar para o TestGenerator decidir
+        const agent = options.agent;
+        const model = options.model;
         return cy.document().then((doc) => {
             const html = doc.documentElement.outerHTML;
             // Apenas gera o teste, não executa mais automaticamente
