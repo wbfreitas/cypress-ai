@@ -9,11 +9,32 @@ Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama) co
 - **Execução de Testes Finais**: Executa testes gerados e permite substituição do teste AI
 - **Suporte ao Ollama**: Integração com modelos de IA locais
 - **TypeScript**: Tipagem completa e IntelliSense
+- **CLI Global**: Comando `cyai` para uso em qualquer projeto
+- **Playground Automatizado**: Ambiente de desenvolvimento completo
 
 ## 📦 Instalação
 
+### Instalação Local (Biblioteca)
 ```bash
 npm install cypress-ai
+```
+
+### Instalação Global (CLI)
+```bash
+# Instalar globalmente
+npm install -g cypress-ai
+
+# Ou usar diretamente com npx
+npx cypress-ai playground
+```
+
+### Instalação Manual (Desenvolvimento)
+```bash
+git clone <seu-repositorio>
+cd cypress-ai
+npm install
+npm run build
+npm install -g .
 ```
 
 ## ⚙️ Configuração
@@ -48,6 +69,34 @@ import '@testing-library/cypress/add-commands'
 require('cypress-ai/dist/commands').registerSupportCommands()
 export {}
 ```
+
+## 🎮 CLI Global
+
+### Comando `cyai`
+
+O Cypress AI inclui um CLI global que pode ser usado em qualquer projeto:
+
+```bash
+# Iniciar o playground
+cyai playground
+
+# Com opções
+cyai playground --port 3000 --no-cypress-final
+
+# Ver ajuda
+cyai help
+
+# Ver versão
+cyai version
+```
+
+### Opções do Playground
+
+| Opção | Descrição | Padrão |
+|-------|-----------|--------|
+| `-p, --port <port>` | Porta da aplicação Angular | `4200` |
+| `--no-cypress-final` | Não abrir Cypress Final automaticamente | `false` |
+| `--no-watch` | Não monitorar arquivos automaticamente | `false` |
 
 ## 🎯 Comandos Disponíveis
 

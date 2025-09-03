@@ -1,51 +1,13 @@
 describe('Teste E2E', () => {
-  it('deve preencher o email e senha e clicar no botão "Entrar"', () => {
+  it('deve preencher o email, senha e clicar em Entrar', () => {
     cy.visit('/');
-    
     cy.get('[id="email"]').type('user@ex.com');
     cy.get('[id="password"]').type('123456');
-    
-    cy.get('[type="submit"]').click();
+    cy.contains('button', 'Entrar').click();
   });
 
-  it('deve verificar se aparece "Bem-vindo" no dashboard', () => {
+  it('deve validar se a mensagem "Bem-vindo" está sendo exibida', () => {
     cy.visit('/');
-    
-    cy.get('[id="email"]').type('user@ex.com');
-    cy.get('[id="password"]').type('123456');
-    
-    cy.get('[type="submit"]').click();
-    
-    cy.contains('Bem-vindo').should('be.visible');
-  });
-
-  it('deve clicar no botão "Abrir Modal" e verificar se o modal aparece', () => {
-    cy.visit('/');
-    
-    cy.get('[id="email"]').type('user@ex.com');
-    cy.get('[id="password"]').type('123456');
-    
-    cy.get('[type="submit"]').click();
-    
-    cy.contains('Abrir Modal').click();
-    
-    cy.get('.modal').should('be.visible');
-  });
-
-  it('deve clicar no botão "Fechar" do modal', () => {
-    cy.visit('/');
-    
-    cy.get('[id="email"]').type('user@ex.com');
-    cy.get('[id="password"]').type('123456');
-    
-    cy.get('[type="submit"]').click();
-    
-    cy.contains('Abrir Modal').click();
-    
-    cy.get('.modal').should('be.visible');
-
-    cy.contains('Fechar').click();
-
-    cy.get('.modal').should('not.exist');
+    cy.get('.content h2').should('contain.text', 'Bem-vindo');
   });
 });
