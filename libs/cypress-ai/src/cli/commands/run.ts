@@ -33,7 +33,7 @@ export class RunCommand {
       ...options
     };
 
-    console.log('🚀 Executando testes Cypress AI...\n');
+    console.log('- Executando testes Cypress AI...\n');
 
     try {
       // Verificar se é um projeto Angular
@@ -46,7 +46,7 @@ export class RunCommand {
       await this.runTests();
 
     } catch (error: any) {
-      console.error('❌ Erro ao executar testes:', error.message);
+      console.error('- Erro ao executar testes:', error.message);
       process.exit(1);
     }
   }
@@ -64,7 +64,7 @@ export class RunCommand {
       throw new Error('cypress.config.ts não encontrado. Execute "cyai setup" primeiro.');
     }
 
-    console.log('✅ Projeto verificado');
+    console.log('- Projeto verificado');
   }
 
   private async checkEnvFile(): Promise<void> {
@@ -72,15 +72,15 @@ export class RunCommand {
 
     const envPath = path.join(process.cwd(), '.env');
     if (!fs.existsSync(envPath)) {
-      console.log('⚠️  Arquivo .env não encontrado. Execute "cyai setup" primeiro.');
-      console.log('ℹ️  Continuando com configurações padrão...');
+      console.log('- Arquivo .env não encontrado. Execute "cyai setup" primeiro.');
+      console.log('- Continuando com configurações padrão...');
     } else {
-      console.log('✅ Arquivo .env encontrado');
+      console.log('- Arquivo .env encontrado');
     }
   }
 
   private async runTests(): Promise<void> {
-    console.log('🧪 Executando testes...');
+    console.log('- Executando testes...');
 
     const baseUrl = `http://localhost:${this.options.port}`;
     const args = [
@@ -97,7 +97,7 @@ export class RunCommand {
       args.push('--spec', this.options.spec);
     }
 
-    console.log(`📝 Comando: npx ${args.join(' ')}`);
+    console.log(`- Comando: npx ${args.join(' ')}`);
 
     return new Promise<void>((resolve, reject) => {
       const cypressProcess = spawn('npx', args, {
@@ -107,10 +107,10 @@ export class RunCommand {
 
       cypressProcess.on('close', (code: number) => {
         if (code === 0) {
-          console.log('\n✅ Testes executados com sucesso!');
+          console.log('\n- Testes executados com sucesso!');
           resolve();
         } else {
-          console.log(`\n❌ Testes falharam com código: ${code}`);
+          console.log(`\n- Testes falharam com código: ${code}`);
           reject(new Error(`Testes falharam com código ${code}`));
         }
       });

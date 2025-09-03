@@ -23,8 +23,8 @@ class TestGenerator {
         const existingTest = this.fileManager.readFileIfExists(absPath);
         // Determina o agente a usar (prioridade: parâmetro > .env > padrão)
         const selectedAgent = agent || process.env['AI_AGENT'] || 'ollama';
-        console.log('🤖 Agente selecionado:', selectedAgent);
-        console.log('🔧 Configuração do agente:', {
+        console.log('- Agente selecionado:', selectedAgent);
+        console.log('- Configuração do agente:', {
             agent: selectedAgent,
             model: model || config.model || process.env['AI_OLLAMA_MODEL'],
             stackspotRealm: process.env['STACKSPOT_REALM'],
@@ -34,7 +34,7 @@ class TestGenerator {
         // Cria o agente
         const finalModel = model || config.model || process.env['AI_OLLAMA_MODEL'] || 'qwen2.5-coder:latest';
         const aiAgent = AgentFactory_1.AgentFactory.createAgent(selectedAgent, { ...config, model: finalModel });
-        console.log('✅ Agente criado:', selectedAgent);
+        console.log('- Agente criado:', selectedAgent);
         // Constrói o prompt inicial
         const initialPrompt = this.promptBuilder.buildPrompt(instructions, existingTest, html);
         // Verifica se o retry automático está habilitado
@@ -42,12 +42,12 @@ class TestGenerator {
         if (autoRetryEnabled) {
             // Tenta gerar o teste com retry automático
             const maxRetries = parseInt(process.env['CYPRESS_AI_MAX_RETRIES'] || '3');
-            console.log(`🔄 Sistema de retry automático habilitado (máximo ${maxRetries} tentativas)`);
+            console.log(`- Sistema de retry automático habilitado (máximo ${maxRetries} tentativas)`);
             return await this.generateTestWithRetry(aiAgent, initialPrompt, instructions, existingTest, html, absPath, maxRetries);
         }
         else {
             // Geração simples sem retry
-            console.log('⚡ Modo simples - sem retry automático');
+            console.log('- Modo simples - sem retry automático');
             const generatedCode = await aiAgent.generateTest(initialPrompt, undefined);
             const cleanCode = this.promptBuilder.cleanGeneratedCode(generatedCode);
             this.fileManager.writeFile(absPath, cleanCode);
@@ -63,7 +63,7 @@ class TestGenerator {
         let lastGeneratedCode = null;
         while (attempt <= maxRetries) {
             try {
-                console.log(`🔄 Tentativa ${attempt}/${maxRetries} de geração do teste`);
+                console.log(`- Tentativa ${attempt}/${maxRetries} de geração do teste`);
                 // Gera o código usando a IA
                 const generatedCode = await aiAgent.generateTest(prompt, undefined);
                 lastGeneratedCode = generatedCode;
@@ -72,17 +72,17 @@ class TestGenerator {
                 // Salva o arquivo
                 this.fileManager.writeFile(absPath, cleanCode);
                 // Tenta executar o teste para verificar se está funcionando
-                console.log('🧪 Testando o código gerado...');
+                console.log('- Testando o código gerado...');
                 const testResult = await this.testGeneratedCode(absPath);
                 if (testResult.success) {
-                    console.log('✅ Teste gerado e validado com sucesso!');
+                    console.log('- Teste gerado e validado com sucesso!');
                     return true;
                 }
                 else {
                     lastError = testResult.error || 'Erro desconhecido na execução do teste';
-                    console.log(`❌ Teste falhou na tentativa ${attempt}:`, lastError);
+                    console.log(`- Teste falhou na tentativa ${attempt}:`, lastError);
                     if (attempt < maxRetries) {
-                        console.log('🔄 Tentando auto-correção...');
+                        console.log('- Tentando auto-correção...');
                         // Constrói prompt de correção com feedback do erro
                         prompt = this.buildCorrectionPrompt(originalInstructions, existingTest, html, lastError || '', lastGeneratedCode || '');
                     }
@@ -90,16 +90,16 @@ class TestGenerator {
             }
             catch (error) {
                 lastError = error.message;
-                console.log(`❌ Erro na tentativa ${attempt}:`, lastError);
+                console.log(`- Erro na tentativa ${attempt}:`, lastError);
                 if (attempt < maxRetries) {
-                    console.log('🔄 Tentando auto-correção...');
+                    console.log('- Tentando auto-correção...');
                     // Constrói prompt de correção com feedback do erro
                     prompt = this.buildCorrectionPrompt(originalInstructions, existingTest, html, lastError || '', lastGeneratedCode || '');
                 }
             }
             attempt++;
         }
-        console.log(`❌ Falha após ${maxRetries} tentativas. Último erro:`, lastError);
+        console.log(`- Falha após ${maxRetries} tentativas. Último erro:`, lastError);
         return false;
     }
     /**
@@ -191,11 +191,11 @@ Gere um novo código de teste corrigido que resolva o erro identificado.`;
         console.log('🔍 Verificando teste final...');
         // Simula execução bem-sucedida
         const result = { ran: true, status: 0, stdout: 'Teste executado com sucesso', stderr: '' };
-        console.log('✅ Teste final verificado e pronto para substituição');
+        console.log('- Teste final verificado e pronto para substituição');
         // Se o teste passou, pergunta ao usuário se quer substituir
         if (result.status === 0) {
-            console.log('\n✅ Teste final executado com sucesso!');
-            console.log('📝 Deseja substituir o teste AI pelo teste final gerado?');
+            console.log('\n- Teste final executado com sucesso!');
+            console.log('- Deseja substituir o teste AI pelo teste final gerado?');
             console.log('   - Digite "s" ou "sim" para substituir');
             console.log('   - Digite "n" ou "não" para manter como está');
             // Para demonstração, vamos simular que o usuário quer substituir
@@ -206,7 +206,7 @@ Gere um novo código de teste corrigido que resolva o erro identificado.`;
                 const finalTestContent = this.fileManager.readFileIfExists(specPath);
                 // Atualiza o teste AI com o conteúdo do teste final
                 this.fileManager.writeFile(aiSpecPath, finalTestContent);
-                console.log('✅ Teste AI atualizado com o teste final!');
+                console.log('- Teste AI atualizado com o teste final!');
                 return {
                     success: true,
                     message: 'Teste AI atualizado com sucesso',
@@ -214,7 +214,7 @@ Gere um novo código de teste corrigido que resolva o erro identificado.`;
                 };
             }
             else {
-                console.log('ℹ️  Teste AI mantido como estava');
+                console.log('- Teste AI mantido como estava');
                 return {
                     success: true,
                     message: 'Teste AI mantido',
@@ -223,7 +223,7 @@ Gere um novo código de teste corrigido que resolva o erro identificado.`;
             }
         }
         else {
-            console.log('❌ Teste final falhou. Não será substituído.');
+            console.log('- Teste final falhou. Não será substituído.');
             return {
                 success: false,
                 message: 'Teste final falhou',

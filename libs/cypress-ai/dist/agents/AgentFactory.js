@@ -9,12 +9,12 @@ class AgentFactory {
      * Cria uma instância do agente baseado na configuração
      */
     static createAgent(agentType, config) {
-        console.log('🏭 AgentFactory: Criando agente do tipo:', agentType);
+        console.log('- AgentFactory: Criando agente do tipo:', agentType);
         switch (agentType) {
             case 'ollama':
                 const apiBase = process.env['AI_OLLAMA_BASE_URL'] || config.apiBase || 'http://127.0.0.1:11434';
                 const model = config.model || 'qwen2.5-coder:latest';
-                console.log('🦙 Criando OllamaAgent com:', { apiBase, model });
+                console.log('- Criando OllamaAgent com:', { apiBase, model });
                 return new OllamaAgent_1.OllamaAgent(apiBase, model);
             case 'stackspot':
                 const stackSpotConfig = {
@@ -24,7 +24,7 @@ class AgentFactory {
                     agentId: process.env['STACKSPOT_AGENT_ID'] || '',
                     baseUrl: process.env['STACKSPOT_BASE_URL'] || 'https://genai-inference-app.stackspot.com'
                 };
-                console.log('☁️ Criando StackSpotAgent com:', {
+                console.log('- Criando StackSpotAgent com:', {
                     realm: stackSpotConfig.realm,
                     clientId: stackSpotConfig.clientId,
                     agentId: stackSpotConfig.agentId,

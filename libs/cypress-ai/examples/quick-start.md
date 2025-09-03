@@ -1,6 +1,6 @@
 # Quick Start - Cypress AI CLI
 
-## 🚀 Início Rápido
+## - Início Rápido
 
 ### 1. Instalar o CLI
 ```bash
@@ -48,7 +48,7 @@ describe('Login', () => {
 4. **Geração de Teste Final**: Salvo em `cypress/e2e-final/`
 5. **Pergunta de Substituição**: Se quer substituir o teste AI
 
-## 🔧 Comandos Úteis
+## - Comandos Úteis
 
 ```bash
 # Configurar projeto

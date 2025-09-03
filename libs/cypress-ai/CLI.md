@@ -1,6 +1,6 @@
 # Cypress AI CLI - Guia Completo
 
-## 🚀 Instalação
+## - Instalação
 
 ### Opção 1: Instalação Global
 ```bash
@@ -21,7 +21,7 @@ npm run build
 npm install -g .
 ```
 
-## 🎮 Comandos Disponíveis
+## - Comandos Disponíveis
 
 ### `cyai playground`
 Inicia o ambiente de desenvolvimento automatizado.
@@ -92,7 +92,7 @@ O comando `cyai playground` automatiza todo o fluxo de desenvolvimento:
 - Mostra resultados no console
 - Continua monitorando para próximas mudanças
 
-## 🔧 Configuração do Projeto
+## - Configuração do Projeto
 
 Para usar o CLI, seu projeto Angular precisa ter:
 
@@ -178,7 +178,7 @@ describe('Login', () => {
 - Pode ser visualizado no Cypress Final
 - Permite execução manual e debug
 
-## 🛠️ Troubleshooting
+## - Troubleshooting
 
 ### Erro: "command not found: cyai"
 ```bash
@@ -245,7 +245,7 @@ cyai playground --port 3000
 cyai playground --no-cypress-final
 ```
 
-## 🔄 Integração com CI/CD
+## - Integração com CI/CD
 
 O CLI pode ser usado em pipelines:
 

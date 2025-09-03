@@ -57,7 +57,7 @@ class RunCommand {
             browser: 'chrome',
             ...options
         };
-        console.log('🚀 Executando testes Cypress AI...\n');
+        console.log('- Executando testes Cypress AI...\n');
         try {
             // Verificar se é um projeto Angular
             await this.checkProject();
@@ -67,7 +67,7 @@ class RunCommand {
             await this.runTests();
         }
         catch (error) {
-            console.error('❌ Erro ao executar testes:', error.message);
+            console.error('- Erro ao executar testes:', error.message);
             process.exit(1);
         }
     }
@@ -81,21 +81,21 @@ class RunCommand {
         if (!fs.existsSync(cypressConfigPath)) {
             throw new Error('cypress.config.ts não encontrado. Execute "cyai setup" primeiro.');
         }
-        console.log('✅ Projeto verificado');
+        console.log('- Projeto verificado');
     }
     async checkEnvFile() {
         console.log('🔍 Verificando arquivo .env...');
         const envPath = path.join(process.cwd(), '.env');
         if (!fs.existsSync(envPath)) {
-            console.log('⚠️  Arquivo .env não encontrado. Execute "cyai setup" primeiro.');
-            console.log('ℹ️  Continuando com configurações padrão...');
+            console.log('- Arquivo .env não encontrado. Execute "cyai setup" primeiro.');
+            console.log('- Continuando com configurações padrão...');
         }
         else {
-            console.log('✅ Arquivo .env encontrado');
+            console.log('- Arquivo .env encontrado');
         }
     }
     async runTests() {
-        console.log('🧪 Executando testes...');
+        console.log('- Executando testes...');
         const baseUrl = `http://localhost:${this.options.port}`;
         const args = [
             'cypress', 'run',
@@ -108,7 +108,7 @@ class RunCommand {
         if (this.options.spec) {
             args.push('--spec', this.options.spec);
         }
-        console.log(`📝 Comando: npx ${args.join(' ')}`);
+        console.log(`- Comando: npx ${args.join(' ')}`);
         return new Promise((resolve, reject) => {
             const cypressProcess = (0, child_process_1.spawn)('npx', args, {
                 stdio: 'inherit',
@@ -116,11 +116,11 @@ class RunCommand {
             });
             cypressProcess.on('close', (code) => {
                 if (code === 0) {
-                    console.log('\n✅ Testes executados com sucesso!');
+                    console.log('\n- Testes executados com sucesso!');
                     resolve();
                 }
                 else {
-                    console.log(`\n❌ Testes falharam com código: ${code}`);
+                    console.log(`\n- Testes falharam com código: ${code}`);
                     reject(new Error(`Testes falharam com código ${code}`));
                 }
             });

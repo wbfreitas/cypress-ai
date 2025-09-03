@@ -10,8 +10,8 @@ class StackSpotAgent {
         };
     }
     async generateTest(prompt) {
-        console.log('☁️ StackSpotAgent: Iniciando geração de teste');
-        console.log('🔧 Configuração StackSpot:', {
+        console.log('- StackSpotAgent: Iniciando geração de teste');
+        console.log('- Configuração StackSpot:', {
             realm: this.config.realm,
             clientId: this.config.clientId,
             agentId: this.config.agentId,
@@ -19,29 +19,29 @@ class StackSpotAgent {
         });
         try {
             // 1. Autenticar e obter JWT
-            console.log('🔐 StackSpotAgent: Autenticando...');
+            console.log('- StackSpotAgent: Autenticando...');
             const jwt = await this.authenticate();
-            console.log('✅ StackSpotAgent: Autenticação bem-sucedida');
+            console.log('- StackSpotAgent: Autenticação bem-sucedida');
             // 2. Fazer chat com o agente
-            console.log('💬 StackSpotAgent: Enviando prompt para o agente...');
+            console.log('- StackSpotAgent: Enviando prompt para o agente...');
             const response = await this.chatWithAgent(prompt, jwt);
-            console.log('✅ StackSpotAgent: Resposta recebida');
+            console.log('- StackSpotAgent: Resposta recebida');
             // 3. Extrair e retornar a resposta
             const result = this.extractResponse(response);
-            console.log('📝 StackSpotAgent: Teste gerado com sucesso');
+            console.log('- StackSpotAgent: Teste gerado com sucesso');
             return result;
         }
         catch (error) {
-            console.error('❌ StackSpotAgent: Erro:', error.message);
+            console.error('- StackSpotAgent: Erro:', error.message);
             throw new Error(`Erro no StackSpot Agent: ${error.message}`);
         }
     }
     async authenticate() {
         const authUrl = `https://idm.stackspot.com/${this.config.realm}/oidc/oauth/token`;
-        console.log('🔐 StackSpotAgent: URL de autenticação:', authUrl);
-        console.log('🔐 StackSpotAgent: Realm:', this.config.realm);
-        console.log('🔐 StackSpotAgent: Client ID:', this.config.clientId);
-        console.log('🔐 StackSpotAgent: Client Key:', this.config.clientKey ? '***' + this.config.clientKey.slice(-4) : 'NÃO CONFIGURADO');
+        console.log('- StackSpotAgent: URL de autenticação:', authUrl);
+        console.log('- StackSpotAgent: Realm:', this.config.realm);
+        console.log('- StackSpotAgent: Client ID:', this.config.clientId);
+        console.log('- StackSpotAgent: Client Key:', this.config.clientKey ? '***' + this.config.clientKey.slice(-4) : 'NÃO CONFIGURADO');
         const formData = new URLSearchParams();
         formData.append('grant_type', 'client_credentials');
         formData.append('client_id', this.config.clientId);
@@ -55,16 +55,16 @@ class StackSpotAgent {
         });
         if (!response.ok) {
             const errorText = await response.text().catch(() => '');
-            console.error('❌ StackSpotAgent: Erro de autenticação:', response.status, response.statusText);
-            console.error('❌ StackSpotAgent: Resposta do erro:', errorText);
+            console.error('- StackSpotAgent: Erro de autenticação:', response.status, response.statusText);
+            console.error('- StackSpotAgent: Resposta do erro:', errorText);
             throw new Error(`Falha na autenticação: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
         if (!data.access_token) {
-            console.error('❌ StackSpotAgent: Resposta da autenticação:', data);
+            console.error('- StackSpotAgent: Resposta da autenticação:', data);
             throw new Error('Token de acesso não encontrado na resposta');
         }
-        console.log('✅ StackSpotAgent: Token obtido com sucesso');
+        console.log('- StackSpotAgent: Token obtido com sucesso');
         return data.access_token;
     }
     async chatWithAgent(prompt, jwt) {

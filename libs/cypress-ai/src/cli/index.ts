@@ -70,7 +70,7 @@ program
   .description('Mostra ajuda detalhada')
   .action(() => {
     console.log(`
-🚀 Cypress AI CLI - Comandos Disponíveis
+- Cypress AI CLI - Comandos Disponíveis
 
 📋 Comandos:
   cyai setup          Configura o projeto Angular para usar Cypress AI
@@ -79,7 +79,7 @@ program
   cyai version        Mostra informações da versão
   cyai help           Mostra esta ajuda
 
-🎮 Exemplos:
+- Exemplos:
   npx cyai setup                         # Configura o projeto (modo interativo)
   npx cyai setup --agent stackspot       # Configura com StackSpot
   npx cyai setup --agent ollama --model llama2  # Configura com Ollama e modelo específico
@@ -88,7 +88,7 @@ program
   npx cyai playground                    # Inicia o playground
   npx cyai version                       # Mostra versão
 
-🔧 Opções do Setup:
+- Opções do Setup:
   -a, --agent <agent>        Agente de IA (ollama ou stackspot, padrão: ollama)
   -m, --model <model>        Modelo do Ollama (padrão: qwen2.5-coder:latest)
   -u, --base-url <url>       URL base da aplicação (padrão: http://localhost:4200)
@@ -98,13 +98,13 @@ program
   --no-interactive           Não usar modo interativo
   -f, --force                Sobrescrever arquivos existentes
 
-🔧 Opções do Run:
+- Opções do Run:
   -s, --spec <spec>          Arquivo de teste específico para executar
   -p, --port <port>          Porta da aplicação Angular (padrão: 4200)
   --no-headless              Executar em modo interativo (não headless)
   -b, --browser <browser>    Navegador para usar (padrão: chrome)
 
-🔧 Opções do Playground:
+- Opções do Playground:
   -p, --port <port>          Porta da aplicação Angular (padrão: 4200)
   --no-cypress-final         Não abrir Cypress Final automaticamente
   --no-watch                 Não monitorar arquivos automaticamente

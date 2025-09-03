@@ -15,8 +15,8 @@ export class OllamaAgent {
    * Gera código de teste usando o Ollama
    */
   async generateTest(prompt: string, model?: string): Promise<string> {
-    console.log('🦙 OllamaAgent: Iniciando geração de teste');
-    console.log('🔧 Configuração Ollama:', {
+    console.log('- OllamaAgent: Iniciando geração de teste');
+    console.log('- Configuração Ollama:', {
       apiBase: this.apiBase,
       model: model || this.defaultModel
     });
@@ -29,7 +29,7 @@ export class OllamaAgent {
     };
 
     try {
-      console.log('🌐 OllamaAgent: Enviando requisição para:', `${this.apiBase}/api/generate`);
+      console.log('- OllamaAgent: Enviando requisição para:', `${this.apiBase}/api/generate`);
       const response = await fetch(`${this.apiBase}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,10 +48,10 @@ export class OllamaAgent {
         throw new Error('IA não retornou código de teste.');
       }
 
-      console.log('✅ OllamaAgent: Teste gerado com sucesso');
+      console.log('- OllamaAgent: Teste gerado com sucesso');
       return code;
     } catch (error) {
-      console.error('❌ OllamaAgent: Erro:', error);
+      console.error('- OllamaAgent: Erro:', error);
       if (error instanceof Error) {
         throw error;
       }

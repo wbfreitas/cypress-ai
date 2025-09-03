@@ -39,7 +39,7 @@ export class PlaygroundCommand {
       ...options
     };
 
-    console.log('🚀 Iniciando Cypress AI Playground...\n');
+    console.log('- Iniciando Cypress AI Playground...\n');
     
     try {
       // 1. Inicia a aplicação Angular
@@ -58,18 +58,18 @@ export class PlaygroundCommand {
         this.startFileWatcher();
       }
       
-      console.log('\n✅ Playground iniciado com sucesso!');
+      console.log('\n- Playground iniciado com sucesso!');
       console.log(`🌐 Aplicação rodando em http://localhost:${this.options.port}`);
       if (this.options.watch) {
-        console.log('📝 Edite os arquivos em cypress/e2e-ai/ para executar testes automaticamente');
+        console.log('- Edite os arquivos em cypress/e2e-ai/ para executar testes automaticamente');
       }
       if (this.options.cypressFinal) {
         console.log('🎨 Cypress Final aberto para visualizar testes gerados');
       }
-      console.log('🔄 Pressione Ctrl+C para parar\n');
+      console.log('- Pressione Ctrl+C para parar\n');
       
     } catch (error: any) {
-      console.error('❌ Erro ao iniciar playground:', error.message);
+      console.error('- Erro ao iniciar playground:', error.message);
       this.cleanup();
       process.exit(1);
     }
@@ -81,12 +81,12 @@ export class PlaygroundCommand {
     
     const isAlreadyRunning = await this.checkIfAngularIsRunning();
     if (isAlreadyRunning) {
-      console.log(`✅ Aplicação Angular já está rodando em http://localhost:${this.options.port}`);
+      console.log(`- Aplicação Angular já está rodando em http://localhost:${this.options.port}`);
       this.isAngularRunning = true;
       return;
     }
 
-    console.log('🔄 Iniciando aplicação Angular...');
+    console.log('- Iniciando aplicação Angular...');
     
     return new Promise<void>((resolve, reject) => {
       this.angularProcess = spawn('npm', ['start'], {
@@ -97,7 +97,7 @@ export class PlaygroundCommand {
       this.angularProcess.stdout.on('data', (data: any) => {
         const output = data.toString();
         if (output.includes('Local:') || output.includes(`localhost:${this.options.port}`)) {
-          console.log(`✅ Aplicação Angular iniciada em http://localhost:${this.options.port}`);
+          console.log(`- Aplicação Angular iniciada em http://localhost:${this.options.port}`);
           this.isAngularRunning = true;
           resolve();
         }
@@ -106,11 +106,11 @@ export class PlaygroundCommand {
       this.angularProcess.stderr.on('data', (data: any) => {
         const error = data.toString();
         if (error.includes('EADDRINUSE')) {
-          console.log(`⚠️  Porta ${this.options.port} já está em uso, assumindo que a aplicação já está rodando...`);
+          console.log(`- Porta ${this.options.port} já está em uso, assumindo que a aplicação já está rodando...`);
           this.isAngularRunning = true;
           resolve();
         } else if (!error.includes('webpack') && !error.includes('DevTools')) {
-          console.error('❌ Erro na aplicação Angular:', error);
+          console.error('- Erro na aplicação Angular:', error);
         }
       });
 
@@ -138,7 +138,7 @@ export class PlaygroundCommand {
   private async waitForAngularApp() {
     // Se já verificamos que está rodando, não precisa aguardar
     if (this.isAngularRunning) {
-      console.log('✅ Aplicação Angular já está pronta');
+      console.log('- Aplicação Angular já está pronta');
       return;
     }
 
@@ -152,12 +152,12 @@ export class PlaygroundCommand {
         attempts++;
         exec(`curl -s http://localhost:${this.options.port} > /dev/null`, (error) => {
           if (!error) {
-            console.log('✅ Aplicação Angular está respondendo');
+            console.log('- Aplicação Angular está respondendo');
             resolve();
           } else if (attempts < maxAttempts) {
             setTimeout(checkApp, 1000);
           } else {
-            console.log('⚠️  Aplicação Angular pode não estar respondendo, mas continuando...');
+            console.log('- Aplicação Angular pode não estar respondendo, mas continuando...');
             resolve();
           }
         });
@@ -167,7 +167,7 @@ export class PlaygroundCommand {
   }
 
   private async startCypressFinal() {
-    console.log('🔄 Iniciando Cypress Final...');
+    console.log('- Iniciando Cypress Final...');
     
     return new Promise<void>((resolve) => {
       this.cypressFinalProcess = spawn('npm', ['run', 'cy:final'], {
@@ -178,7 +178,7 @@ export class PlaygroundCommand {
       this.cypressFinalProcess.stdout.on('data', (data: any) => {
         const output = data.toString();
         if (output.includes('Cypress') || output.includes('Electron') || output.includes('DevTools')) {
-          console.log('✅ Cypress Final iniciado');
+          console.log('- Cypress Final iniciado');
           this.isCypressFinalRunning = true;
           resolve();
         }
@@ -191,24 +191,24 @@ export class PlaygroundCommand {
           return;
         }
         if (error.includes('Cypress') || error.includes('Electron')) {
-          console.log('✅ Cypress Final iniciado');
+          console.log('- Cypress Final iniciado');
           this.isCypressFinalRunning = true;
           resolve();
         } else if (error.trim()) {
-          console.log('📝 Cypress Final:', error.trim());
+          console.log('- Cypress Final:', error.trim());
         }
       });
 
       this.cypressFinalProcess.on('error', (error: any) => {
-        console.log('⚠️  Erro ao iniciar Cypress Final:', error.message);
-        console.log('⚠️  Continuando sem Cypress Final...');
+        console.log('- Erro ao iniciar Cypress Final:', error.message);
+        console.log('- Continuando sem Cypress Final...');
         resolve();
       });
 
       // Timeout de 15 segundos
       setTimeout(() => {
         if (!this.isCypressFinalRunning) {
-          console.log('⚠️  Cypress Final pode não ter iniciado corretamente, mas continuando...');
+          console.log('- Cypress Final pode não ter iniciado corretamente, mas continuando...');
           resolve();
         }
       }, 15000);
@@ -222,7 +222,7 @@ export class PlaygroundCommand {
     
     // Verifica se o diretório existe
     if (!fs.existsSync(watchPath)) {
-      console.log('⚠️  Diretório cypress/e2e-ai não existe, criando...');
+      console.log('- Diretório cypress/e2e-ai não existe, criando...');
       fs.mkdirSync(watchPath, { recursive: true });
     }
 
@@ -240,7 +240,7 @@ export class PlaygroundCommand {
         this.handleFileChange(filePath, 'criado');
       });
 
-    console.log('✅ Watcher iniciado');
+    console.log('- Watcher iniciado');
   }
 
   private async handleFileChange(filePath: string, action: string) {
@@ -249,28 +249,28 @@ export class PlaygroundCommand {
     
     // Evita executar o mesmo teste múltiplas vezes
     if (this.runningTests.has(fileName)) {
-      console.log(`⏭️  Teste ${fileName} já está sendo executado, pulando...`);
+      console.log(`- Teste ${fileName} já está sendo executado, pulando...`);
       return;
     }
 
-    console.log(`\n🔄 Arquivo ${action}: ${relativePath}`);
-    console.log(`🚀 Executando teste: ${fileName}`);
+    console.log(`\n- Arquivo ${action}: ${relativePath}`);
+    console.log(`- Executando teste: ${fileName}`);
     
     // Mostrar qual agente está sendo usado
-    const selectedAgent = process.env['AI_AGENT'] || 'ollama';
-    console.log(`🤖 Agente configurado: ${selectedAgent}`);
-    if (selectedAgent === 'stackspot') {
-      console.log(`☁️  Usando StackSpot (Cloud)`);
-    } else {
-      console.log(`🦙 Usando Ollama (Local)`);
-    }
+          const selectedAgent = process.env['AI_AGENT'] || 'ollama';
+      console.log(`- Agente configurado: ${selectedAgent}`);
+      if (selectedAgent === 'stackspot') {
+        console.log(`- Usando StackSpot (Cloud)`);
+      } else {
+        console.log(`- Usando Ollama (Local)`);
+      }
     
     this.runningTests.add(fileName);
     
     try {
       await this.runCypressTest(filePath);
     } catch (error: any) {
-      console.error(`❌ Erro ao executar teste ${fileName}:`, error.message);
+      console.error(`- Erro ao executar teste ${fileName}:`, error.message);
     } finally {
       this.runningTests.delete(fileName);
     }
@@ -307,18 +307,18 @@ export class PlaygroundCommand {
 
       cypressProcess.on('close', (code: number) => {
         if (code === 0) {
-          console.log(`✅ Teste executado com sucesso!`);
+          console.log(`- Teste executado com sucesso!`);
           
           // Mostrar qual agente foi usado
           const selectedAgent = process.env['AI_AGENT'] || 'ollama';
-          console.log(`🤖 Agente usado: ${selectedAgent}`);
+          console.log(`- Agente usado: ${selectedAgent}`);
           if (selectedAgent === 'stackspot') {
-            console.log(`☁️  StackSpot (Cloud) foi usado para gerar o teste`);
+            console.log(`- StackSpot (Cloud) foi usado para gerar o teste`);
           } else {
-            console.log(`🦙 Ollama (Local) foi usado para gerar o teste`);
+            console.log(`- Ollama (Local) foi usado para gerar o teste`);
           }
         } else {
-          console.log(`❌ Teste falhou (código: ${code})`);
+          console.log(`- Teste falhou (código: ${code})`);
           hasError = true;
         }
         
@@ -326,7 +326,7 @@ export class PlaygroundCommand {
         const lines = output.split('\n');
         const lastLines = lines.slice(-10).join('\n');
         if (lastLines.trim()) {
-          console.log('📝 Últimas linhas do output:');
+          console.log('- Últimas linhas do output:');
           console.log(lastLines);
         }
         
@@ -346,21 +346,21 @@ export class PlaygroundCommand {
   }
 
   private cleanup() {
-    console.log('\n🔄 Parando playground...');
+    console.log('\n- Parando playground...');
     
     if (this.watcher) {
       this.watcher.close();
-      console.log('✅ Watcher parado');
+      console.log('- Watcher parado');
     }
     
     if (this.cypressFinalProcess) {
       this.cypressFinalProcess.kill();
-      console.log('✅ Cypress Final parado');
+      console.log('- Cypress Final parado');
     }
     
     if (this.angularProcess) {
       this.angularProcess.kill();
-      console.log('✅ Aplicação Angular parada');
+      console.log('- Aplicação Angular parada');
     }
     
     console.log('👋 Playground finalizado!');

@@ -1,6 +1,6 @@
 # Implementação do Cypress AI CLI
 
-## ✅ O que foi Implementado
+## - O que foi Implementado
 
 ### 1. **Estrutura CLI Completa**
 - **Commander.js**: Framework para CLI
@@ -32,7 +32,7 @@
 - **package.json**: Configuração de bin e scripts
 - **Build**: Compilação TypeScript
 
-## 🏗️ Estrutura de Arquivos
+## - Estrutura de Arquivos
 
 ```
 libs/cypress-ai/
@@ -59,7 +59,7 @@ libs/cypress-ai/
 └── package.json                  # Configuração
 ```
 
-## 🎮 Como Usar
+## - Como Usar
 
 ### Instalação Global
 ```bash
@@ -77,7 +77,7 @@ npx cypress-ai playground
 node ../libs/cypress-ai/dist/cli/index.js playground
 ```
 
-## 🔧 Configuração Necessária
+## - Configuração Necessária
 
 ### 1. **package.json** (Projeto Angular)
 ```json
@@ -131,7 +131,7 @@ export {}
 9. **CLI executa**: Teste automaticamente
 10. **CLI mostra**: Resultados no console
 
-## 🚀 Benefícios
+## - Benefícios
 
 ### Para Desenvolvedores
 - **Automação**: Não precisa iniciar Angular manualmente
@@ -151,7 +151,7 @@ export {}
 - **Suporte**: Troubleshooting documentado
 - **Evolução**: Fácil de atualizar e melhorar
 
-## 🔄 Próximos Passos
+## - Próximos Passos
 
 ### Melhorias Possíveis
 1. **Configuração**: Arquivo de config para opções padrão
@@ -169,15 +169,15 @@ export {}
 
 ## 📊 Status da Implementação
 
-- ✅ **CLI Structure**: Completo
-- ✅ **Playground Command**: Completo
-- ✅ **Version Command**: Completo
-- ✅ **Help Command**: Completo
-- ✅ **TypeScript**: Completo
-- ✅ **Documentation**: Completo
-- ✅ **Installation Script**: Completo
-- ✅ **Examples**: Completo
-- ✅ **Testing**: Funcional
+- - **CLI Structure**: Completo
+- - **Playground Command**: Completo
+- - **Version Command**: Completo
+- - **Help Command**: Completo
+- - **TypeScript**: Completo
+- - **Documentation**: Completo
+- - **Installation Script**: Completo
+- - **Examples**: Completo
+- - **Testing**: Funcional
 
 ## 🎉 Conclusão
 

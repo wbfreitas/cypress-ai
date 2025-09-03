@@ -41,7 +41,7 @@ export class SetupCommand {
       ...options
     };
 
-    console.log('🚀 Configurando Cypress AI no projeto...\n');
+    console.log('- Configurando Cypress AI no projeto...\n');
 
     try {
       // 1. Verificar se é um projeto Angular
@@ -75,15 +75,15 @@ export class SetupCommand {
       // 9. Instalar dependências
       await this.installDependencies();
 
-      console.log('\n✅ Configuração concluída com sucesso!');
-      console.log('\n🎮 Próximos passos:');
+      console.log('\n- Configuração concluída com sucesso!');
+      console.log('\n- Próximos passos:');
       console.log('  1. cyai playground     # Iniciar ambiente de desenvolvimento');
       console.log('  2. cyai version        # Verificar versão');
       console.log('  3. cyai help           # Ver todos os comandos');
-      console.log('\n📚 Documentação: https://github.com/seu-usuario/cypress-ai');
+      console.log('\n- Documentação: https://github.com/seu-usuario/cypress-ai');
 
     } catch (error: any) {
-      console.error('❌ Erro na configuração:', error.message);
+      console.error('- Erro na configuração:', error.message);
       process.exit(1);
     }
   }
@@ -104,7 +104,7 @@ export class SetupCommand {
       throw new Error('Este não parece ser um projeto Angular. @angular/core não encontrado nas dependências.');
     }
 
-    console.log('✅ Projeto Angular detectado');
+    console.log('- Projeto Angular detectado');
   }
 
   private async selectAgent(): Promise<string> {
@@ -123,13 +123,13 @@ export class SetupCommand {
         const choice = answer.trim();
         
         if (choice === '1') {
-          console.log('✅ Ollama selecionado');
+          console.log('- Ollama selecionado');
           resolve('ollama');
         } else if (choice === '2') {
-          console.log('✅ StackSpot selecionado');
+          console.log('- StackSpot selecionado');
           resolve('stackspot');
         } else {
-          console.log('⚠️  Escolha inválida, usando Ollama como padrão');
+          console.log('- Escolha inválida, usando Ollama como padrão');
           resolve('ollama');
         }
       });
@@ -138,7 +138,7 @@ export class SetupCommand {
 
   private async configureAgentVariables(): Promise<void> {
     if (this.options.agent === 'stackspot') {
-      console.log('\n🔧 Configurando StackSpot...');
+      console.log('\n- Configurando StackSpot...');
       
       const rl = readline.createInterface({
         input: process.stdin,
@@ -157,9 +157,9 @@ export class SetupCommand {
       }
 
       rl.close();
-      console.log('✅ Configuração do StackSpot concluída');
+      console.log('- Configuração do StackSpot concluída');
     } else {
-      console.log('\n🔧 Configurando Ollama...');
+      console.log('\n- Configurando Ollama...');
       
       const rl = readline.createInterface({
         input: process.stdin,
@@ -177,7 +177,7 @@ export class SetupCommand {
       }
 
       rl.close();
-      console.log('✅ Configuração do Ollama concluída');
+      console.log('- Configuração do Ollama concluída');
     }
   }
 
@@ -190,12 +190,12 @@ export class SetupCommand {
   }
 
   private async createEnvFile(): Promise<void> {
-    console.log('📝 Criando arquivo .env...');
+    console.log('- Criando arquivo .env...');
 
     const envPath = path.join(process.cwd(), '.env');
     
     if (fs.existsSync(envPath) && !this.options.force) {
-      console.log('⚠️  Arquivo .env já existe. Use --force para sobrescrever.');
+      console.log('- Arquivo .env já existe. Use --force para sobrescrever.');
       return;
     }
 
@@ -240,16 +240,16 @@ STACKSPOT_BASE_URL=${this.options.stackspotBaseUrl || 'https://genai-inference-a
 `;
 
     fs.writeFileSync(envPath, envContent);
-    console.log('✅ Arquivo .env criado');
+    console.log('- Arquivo .env criado');
   }
 
   private async configureCypressConfig(): Promise<void> {
-    console.log('⚙️  Configurando cypress.config.ts...');
+    console.log('- Configurando cypress.config.ts...');
 
     const configPath = path.join(process.cwd(), 'cypress.config.ts');
     
     if (fs.existsSync(configPath) && !this.options.force) {
-      console.log('⚠️  cypress.config.ts já existe. Use --force para sobrescrever.');
+      console.log('- cypress.config.ts já existe. Use --force para sobrescrever.');
       return;
     }
 
@@ -278,7 +278,7 @@ export default defineConfig({
 `;
 
     fs.writeFileSync(configPath, configContent);
-    console.log('✅ cypress.config.ts configurado');
+    console.log('- cypress.config.ts configurado');
   }
 
   private async createSupportFile(): Promise<void> {
@@ -293,7 +293,7 @@ export default defineConfig({
     }
 
     if (fs.existsSync(supportFile) && !this.options.force) {
-      console.log('⚠️  cypress/support/e2e.ts já existe. Use --force para sobrescrever.');
+      console.log('- cypress/support/e2e.ts já existe. Use --force para sobrescrever.');
       return;
     }
 
@@ -303,7 +303,7 @@ export {}
 `;
 
     fs.writeFileSync(supportFile, supportContent);
-    console.log('✅ cypress/support/e2e.ts criado');
+    console.log('- cypress/support/e2e.ts criado');
   }
 
   private async createDirectories(): Promise<void> {
@@ -314,12 +314,12 @@ export {}
 
     if (!fs.existsSync(aiDir)) {
       fs.mkdirSync(aiDir, { recursive: true });
-      console.log(`✅ Diretório ${this.options.aiDir} criado`);
+      console.log(`- Diretório ${this.options.aiDir} criado`);
     }
 
     if (!fs.existsSync(finalDir)) {
       fs.mkdirSync(finalDir, { recursive: true });
-      console.log(`✅ Diretório ${this.options.finalDir} criado`);
+      console.log(`- Diretório ${this.options.finalDir} criado`);
     }
 
     // Criar arquivo .gitkeep para manter os diretórios no git
@@ -336,7 +336,7 @@ export {}
   }
 
   private async updatePackageJson(): Promise<void> {
-    console.log('📦 Atualizando package.json...');
+    console.log('- Atualizando package.json...');
 
     const packageJsonPath = path.join(process.cwd(), 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -368,19 +368,19 @@ export {}
 
     if (!packageJson.devDependencies['cypress-ai']) {
       packageJson.devDependencies['cypress-ai'] = 'latest';
-      console.log('✅ cypress-ai adicionado às devDependencies');
+      console.log('- cypress-ai adicionado às devDependencies');
     }
 
     if (!packageJson.devDependencies['dotenv']) {
       packageJson.devDependencies['dotenv'] = '^16.0.0';
-      console.log('✅ dotenv adicionado às devDependencies');
+      console.log('- dotenv adicionado às devDependencies');
     }
 
     if (scriptsUpdated) {
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-      console.log('✅ Scripts adicionados ao package.json');
+      console.log('- Scripts adicionados ao package.json');
     } else {
-      console.log('ℹ️  Scripts já existem no package.json');
+      console.log('- Scripts já existem no package.json');
     }
   }
 
@@ -396,18 +396,18 @@ export {}
                         packageJson.dependencies?.['cypress'];
 
       if (!hasCypress) {
-        console.log('📦 Instalando Cypress...');
+        console.log('- Instalando Cypress...');
         execSync('npm install --save-dev cypress', { stdio: 'inherit' });
       }
 
-      console.log('📦 Instalando cypress-ai...');
+      console.log('- Instalando cypress-ai...');
       execSync('npm install --save-dev cypress-ai', { stdio: 'inherit' });
 
-      console.log('✅ Dependências instaladas');
+      console.log('- Dependências instaladas');
 
     } catch (error: any) {
-      console.log('⚠️  Erro ao instalar dependências:', error.message);
-      console.log('ℹ️  Você pode instalar manualmente com: npm install --save-dev cypress cypress-ai');
+      console.log('- Erro ao instalar dependências:', error.message);
+      console.log('- Você pode instalar manualmente com: npm install --save-dev cypress cypress-ai');
     }
   }
 }

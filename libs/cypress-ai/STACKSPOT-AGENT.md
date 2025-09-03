@@ -4,7 +4,7 @@
 
 Implementação de um novo agente de IA para o Cypress AI que se integra com o StackSpot, permitindo usar serviços de IA em nuvem além do Ollama local.
 
-## ✅ O que foi Implementado
+## - O que foi Implementado
 
 ### 1. **StackSpotAgent**
 - **Autenticação**: OAuth2 com client credentials
@@ -30,7 +30,7 @@ Implementação de um novo agente de IA para o Cypress AI que se integra com o S
 - **STACKSPOT_AGENT_ID**: ID do agente específico
 - **STACKSPOT_BASE_URL**: URL base da API
 
-## 🔧 Implementação Técnica
+## - Implementação Técnica
 
 ### StackSpotAgent
 ```typescript
@@ -136,7 +136,7 @@ private async selectAgent(): Promise<string> {
 }
 ```
 
-## 🚀 Como Usar
+## - Como Usar
 
 ### 1. Configuração Interativa
 ```bash
@@ -185,7 +185,7 @@ STACKSPOT_AGENT_ID=seu-agent-id
 STACKSPOT_BASE_URL=https://genai-inference-app.stackspot.com
 ```
 
-## 🔄 Fluxo de Autenticação
+## - Fluxo de Autenticação
 
 ### 1. **OAuth2 Client Credentials**
 ```bash
@@ -231,7 +231,7 @@ curl 'https://genai-inference-app.stackspot.com/v1/agent/$AGENT_ID/chat' \
 - **Flexibilidade**: Cada desenvolvedor pode escolher seu agente
 - **CI/CD**: StackSpot funciona melhor em ambientes automatizados
 
-## 🔧 Configuração do StackSpot
+## - Configuração do StackSpot
 
 ### 1. **Obter Credenciais**
 - Acesse o StackSpot
@@ -258,13 +258,13 @@ cyai run
 
 ## 📊 Status da Implementação
 
-- ✅ **StackSpotAgent**: Implementado e funcional
-- ✅ **AgentFactory**: Atualizado para suportar StackSpot
-- ✅ **Setup Interativo**: Seleção de agente implementada
-- ✅ **Variáveis de Ambiente**: Configuração via .env
-- ✅ **CLI**: Opções para seleção de agente
-- ✅ **Documentação**: Atualizada com StackSpot
-- ✅ **Testes**: Verificados e funcionando
+- - **StackSpotAgent**: Implementado e funcional
+- - **AgentFactory**: Atualizado para suportar StackSpot
+- - **Setup Interativo**: Seleção de agente implementada
+- - **Variáveis de Ambiente**: Configuração via .env
+- - **CLI**: Opções para seleção de agente
+- - **Documentação**: Atualizada com StackSpot
+- - **Testes**: Verificados e funcionando
 
 ## 🎉 Conclusão
 

@@ -2,7 +2,7 @@
 
 Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama ou StackSpot) com arquitetura orientada a objetos.
 
-## 🚀 Funcionalidades
+## - Funcionalidades
 
 - **Geração de Testes com IA**: Gera testes Cypress automaticamente baseado em instruções em português
 - **Arquitetura Orientada a Objetos**: Código bem estruturado e fácil de manter
@@ -13,7 +13,7 @@ Uma biblioteca TypeScript para gerar testes E2E do Cypress usando IA (Ollama ou 
 - **CLI Global**: Comando `cyai` para uso em qualquer projeto
 - **Playground Automatizado**: Ambiente de desenvolvimento completo
 
-## 📦 Instalação
+## - Instalação
 
 ### Instalação Global (CLI) - Recomendado
 ```bash
@@ -51,7 +51,7 @@ npm run build
 npm install -g .
 ```
 
-## ⚙️ Configuração Automática
+## - Configuração Automática
 
 ### Comando `cyai setup`
 
@@ -69,12 +69,12 @@ cyai setup --agent ollama --model llama2 --port 3000
 ```
 
 **O que o setup faz:**
-- ✅ Cria arquivo `.env` com configurações LLM
-- ✅ Configura `cypress.config.ts` automaticamente
-- ✅ Cria `cypress/support/e2e.ts` se não existir
-- ✅ Cria diretórios `cypress/e2e-ai/` e `cypress/e2e-final/`
-- ✅ Atualiza `package.json` com scripts necessários
-- ✅ Instala dependências automaticamente (incluindo `dotenv`)
+- - Cria arquivo `.env` com configurações LLM
+- - Configura `cypress.config.ts` automaticamente
+- - Cria `cypress/support/e2e.ts` se não existir
+- - Cria diretórios `cypress/e2e-ai/` e `cypress/e2e-final/`
+- - Atualiza `package.json` com scripts necessários
+- - Instala dependências automaticamente (incluindo `dotenv`)
 
 **Integração com .env:**
 A lib carrega automaticamente o arquivo `.env` e usa as variáveis para configuração:
@@ -118,7 +118,7 @@ require('cypress-ai/dist/commands').registerSupportCommands()
 export {}
 ```
 
-## 🔧 Arquivo .env
+## - Arquivo .env
 
 A lib carrega automaticamente o arquivo `.env` para configuração. Você pode personalizar as configurações editando este arquivo:
 
@@ -182,7 +182,7 @@ STACKSPOT_BASE_URL=https://genai-inference-app.stackspot.com
 | `STACKSPOT_AGENT_ID` | Agent ID do StackSpot | - |
 | `STACKSPOT_BASE_URL` | URL base do StackSpot | `https://genai-inference-app.stackspot.com` |
 
-## 🔄 Sistema de Retry Automático
+## - Sistema de Retry Automático
 
 O Cypress AI inclui um sistema inteligente de retry automático que tenta auto-corrigir testes que falham:
 
@@ -209,25 +209,25 @@ CYPRESS_AI_MAX_RETRIES=3
 
 ### Tipos de Erros Corrigidos Automaticamente
 
-- ✅ **Sintaxe incorreta**: Comandos Cypress malformados
-- ✅ **Seletores inválidos**: CSS selectors que não existem na página
-- ✅ **Timing issues**: Problemas de sincronização
-- ✅ **Lógica inadequada**: Fluxos de teste incorretos
-- ✅ **Comandos incorretos**: Uso inadequado da API do Cypress
+- - **Sintaxe incorreta**: Comandos Cypress malformados
+- - **Seletores inválidos**: CSS selectors que não existem na página
+- - **Timing issues**: Problemas de sincronização
+- - **Lógica inadequada**: Fluxos de teste incorretos
+- - **Comandos incorretos**: Uso inadequado da API do Cypress
 
 ### Logs do Sistema
 
 ```
-🔄 Sistema de retry automático habilitado (máximo 3 tentativas)
-🔄 Tentativa 1/3 de geração do teste
-🧪 Testando o código gerado...
-❌ Teste falhou na tentativa 1: Element not found
-🔄 Tentando auto-correção...
-🔄 Tentativa 2/3 de geração do teste
-✅ Teste gerado e validado com sucesso!
+- Sistema de retry automático habilitado (máximo 3 tentativas)
+- Tentativa 1/3 de geração do teste
+- Testando o código gerado...
+- Teste falhou na tentativa 1: Element not found
+- Tentando auto-correção...
+- Tentativa 2/3 de geração do teste
+- Teste gerado e validado com sucesso!
 ```
 
-## 🎮 CLI Global
+## - CLI Global
 
 ### Comando `cyai`
 
@@ -339,7 +339,7 @@ describe('Fluxo Completo', () => {
 });
 ```
 
-## 🏗️ Arquitetura
+## - Arquitetura
 
 A biblioteca foi refatorada seguindo princípios de orientação a objetos:
 
@@ -359,7 +359,7 @@ A biblioteca foi refatorada seguindo princípios de orientação a objetos:
 ### Plugin
 - **`CypressAiPlugin`**: Plugin principal do Cypress
 
-## 🔧 Configuração do Ollama
+## - Configuração do Ollama
 
 1. Instale o Ollama: https://ollama.ai/
 2. Execute o modelo desejado:
@@ -403,14 +403,14 @@ describe('Fluxo de Login', () => {
 });
 ```
 
-## 🔄 Fluxo de Trabalho
+## - Fluxo de Trabalho
 
 1. **Geração**: `cy.ai()` ou `cy.prompt()` gera o teste na pasta `e2e-final`
 2. **Execução**: `cy.runFinal()` executa o teste final
 3. **Substituição**: Se o teste passar, pergunta se quer substituir o teste AI
 4. **Atualização**: Se confirmado, atualiza o teste AI com o teste final
 
-## 🛠️ Desenvolvimento
+## - Desenvolvimento
 
 ```bash
 # Instalar dependências
@@ -426,19 +426,19 @@ npm run dev
 npm run clean
 ```
 
-## 📝 Changelog
+## - Changelog
 
 ### v0.2.0
-- ✅ Refatoração completa para TypeScript
-- ✅ Arquitetura orientada a objetos
-- ✅ Novo comando `cy.runFinal()`
-- ✅ Separação de responsabilidades
-- ✅ Tipagem completa
+- - Refatoração completa para TypeScript
+- - Arquitetura orientada a objetos
+- - Novo comando `cy.runFinal()`
+- - Separação de responsabilidades
+- - Tipagem completa
 
 ### v0.1.0
-- ✅ Versão inicial em JavaScript
-- ✅ Integração com Ollama
-- ✅ Comandos básicos `cy.ai()` e `cy.prompt()`
+- - Versão inicial em JavaScript
+- - Integração com Ollama
+- - Comandos básicos `cy.ai()` e `cy.prompt()`
 
 ## 🤝 Contribuição
 

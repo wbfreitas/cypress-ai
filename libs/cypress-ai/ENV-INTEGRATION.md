@@ -4,7 +4,7 @@
 
 A lib Cypress AI agora carrega automaticamente o arquivo `.env` e usa as variáveis de ambiente para configuração, eliminando a necessidade de passar configurações manualmente.
 
-## ✅ O que foi Implementado
+## - O que foi Implementado
 
 ### 1. **Carregamento Automático do .env**
 - **dotenv**: Adicionado como dependência
@@ -27,7 +27,7 @@ A lib Cypress AI agora carrega automaticamente o arquivo `.env` e usa as variáv
 - `CYPRESS_AI_DIR`: Diretório dos testes AI
 - `CYPRESS_FINAL_DIR`: Diretório dos testes finais
 
-## 🔧 Implementação Técnica
+## - Implementação Técnica
 
 ### Carregamento do .env
 ```typescript
@@ -93,7 +93,7 @@ CYPRESS_FINAL_DIR=cypress/e2e-final
 # CYPRESS_AI_SYSTEM_PROMPT=Você é um especialista em testes E2E com Cypress.
 ```
 
-## 🚀 Como Usar
+## - Como Usar
 
 ### 1. Configuração Automática
 ```bash
@@ -116,7 +116,7 @@ cyai playground --port 3000
 node -e "require('dotenv').config(); console.log(process.env.AI_OLLAMA_MODEL);"
 ```
 
-## 🔄 Fluxo de Configuração
+## - Fluxo de Configuração
 
 ### Antes (Manual)
 1. Instalar dependências
@@ -150,7 +150,7 @@ node -e "require('dotenv').config(); console.log(process.env.AI_OLLAMA_MODEL);"
 - **Colaboração**: Configurações compartilhadas via .env
 - **CI/CD**: Configuração consistente em pipelines
 
-## 🔧 Dependências
+## - Dependências
 
 ### Adicionadas Automaticamente
 - **dotenv**: Para carregamento do arquivo .env
@@ -167,12 +167,12 @@ npm install --save-dev dotenv @types/node
 
 ## 📊 Status da Implementação
 
-- ✅ **Carregamento automático**: dotenv configurado
-- ✅ **Plugin atualizado**: Usa variáveis de ambiente
-- ✅ **Comandos CLI**: Integrados com .env
-- ✅ **Setup automático**: Instala dotenv
-- ✅ **Documentação**: Atualizada com informações
-- ✅ **Testes**: Verificados e funcionando
+- - **Carregamento automático**: dotenv configurado
+- - **Plugin atualizado**: Usa variáveis de ambiente
+- - **Comandos CLI**: Integrados com .env
+- - **Setup automático**: Instala dotenv
+- - **Documentação**: Atualizada com informações
+- - **Testes**: Verificados e funcionando
 
 ## 🎉 Conclusão
 

@@ -4,7 +4,7 @@
 
 O comando `cyai setup` automatiza completamente a configuração inicial de um projeto Angular para usar o Cypress AI, eliminando a necessidade de configuração manual.
 
-## ✅ O que foi Implementado
+## - O que foi Implementado
 
 ### 1. **Comando Setup Completo**
 - **Verificação de Projeto**: Detecta se é um projeto Angular válido
@@ -34,7 +34,7 @@ O comando `cyai setup` automatiza completamente a configuração inicial de um p
 - **Integração**: Todos os comandos usam as variáveis do .env
 - **Flexibilidade**: Pode sobrescrever via parâmetros de linha de comando
 
-## 🚀 Como Usar
+## - Como Usar
 
 ### Instalação e Configuração
 ```bash
@@ -134,7 +134,7 @@ export {}
 }
 ```
 
-## 🔧 Integração com Variáveis de Ambiente
+## - Integração com Variáveis de Ambiente
 
 ### Carregamento Automático do .env
 A lib carrega automaticamente o arquivo `.env` em todos os módulos:
@@ -195,7 +195,7 @@ async run(options: PlaygroundOptions = {}) {
 - **Flexibilidade**: Pode sobrescrever via .env ou parâmetros
 - **Padrões sensatos**: Valores padrão funcionam out-of-the-box
 
-## 🎮 Fluxo de Trabalho Simplificado
+## - Fluxo de Trabalho Simplificado
 
 ### Antes (Manual)
 1. Instalar dependências
@@ -209,7 +209,7 @@ async run(options: PlaygroundOptions = {}) {
 1. `cyai setup` - Tudo configurado automaticamente
 2. `cyai playground` - Iniciar desenvolvimento
 
-## 🚀 Benefícios
+## - Benefícios
 
 ### Para Desenvolvedores
 - **Zero Configuração**: Setup em um comando
@@ -229,7 +229,7 @@ async run(options: PlaygroundOptions = {}) {
 - **Versionamento**: .env pode ser versionado (sem secrets)
 - **CI/CD**: Configuração consistente em ambientes
 
-## 🔄 Próximos Passos
+## - Próximos Passos
 
 ### Melhorias Futuras
 1. **Templates**: Diferentes templates de configuração
@@ -247,16 +247,16 @@ async run(options: PlaygroundOptions = {}) {
 
 ## 📊 Status da Implementação
 
-- ✅ **Setup Command**: Completo e funcional
-- ✅ **Env Generator**: Gera .env com todas as configurações
-- ✅ **Cypress Config**: Configuração automática
-- ✅ **Support File**: Criação automática
-- ✅ **Directories**: Criação de diretórios
-- ✅ **Package Scripts**: Atualização automática
-- ✅ **Dependencies**: Instalação automática
-- ✅ **Run Command**: Execução de testes
-- ✅ **Environment Variables**: Integração completa
-- ✅ **Documentation**: Documentação atualizada
+- - **Setup Command**: Completo e funcional
+- - **Env Generator**: Gera .env com todas as configurações
+- - **Cypress Config**: Configuração automática
+- - **Support File**: Criação automática
+- - **Directories**: Criação de diretórios
+- - **Package Scripts**: Atualização automática
+- - **Dependencies**: Instalação automática
+- - **Run Command**: Execução de testes
+- - **Environment Variables**: Integração completa
+- - **Documentation**: Documentação atualizada
 
 ## 🎉 Conclusão
 
