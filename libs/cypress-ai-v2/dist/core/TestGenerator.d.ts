@@ -52,8 +52,16 @@ export declare class TestGenerator {
      */
     private buildDynamicHtmlPrompt;
     /**
-     * Gera caminho do arquivo de teste
+     * Gera caminho do arquivo de teste com nome inteligente
      */
     private generateSpecPath;
+    /**
+     * Gera nome de arquivo inteligente baseado nas instruções
+     */
+    private generateIntelligentFileName;
+    /**
+     * Limpa e formata o nome do arquivo
+     */
+    private cleanFileName;
 }
 //# sourceMappingURL=TestGenerator.d.ts.map

@@ -56,7 +56,7 @@ class TestGenerator {
     async generateTest(options) {
         const { instructions, specPath, context } = options;
         // Determina o caminho do arquivo
-        const finalSpecPath = specPath || this.generateSpecPath();
+        const finalSpecPath = specPath || await this.generateSpecPath(instructions);
         // Captura contexto da página se não fornecido
         const pageContext = context || await this.capturePageContext();
         // Constrói prompt inicial
@@ -131,7 +131,7 @@ class TestGenerator {
      */
     buildPrompt(instructions, context) {
         const steps = Array.isArray(instructions) ? instructions.join('\n- ') : String(instructions);
-        return `Você é um especialista em testes E2E com Cypress. Gere um teste completo baseado nas instruções fornecidas.
+        return `Você é um especialista em testes E2E com Cypress. Gere um teste completo e robusto baseado nas instruções fornecidas.
 
 **INSTRUÇÕES:**
 ${steps}
@@ -139,15 +139,24 @@ ${steps}
 **CONTEXTO DA PÁGINA:**
 ${context}
 
-**REGRAS IMPORTANTES:**
-1. Use APENAS seletores CSS válidos (não use :contains() diretamente)
-2. Use cy.contains() para buscar por texto
-3. Use cy.get() para seletores CSS
+**REGRAS OBRIGATÓRIAS:**
+1. Use seletores ESPECÍFICOS e ROBUSTOS (evite regex genéricos como /modal/i)
+2. Use cy.contains() para buscar por texto EXATO ('Título do Modal', 'Fechar')
+3. Use cy.get() para seletores CSS específicos (.modal, .button, etc.)
 4. Sempre aguarde elementos com .should('be.visible')
 5. Use .click({ force: true }) apenas quando necessário
 6. Teste cenários positivos e negativos quando apropriado
 7. Use describe() e it() para organizar os testes
 8. Adicione comentários explicativos nos testes
+9. Para modais, use .modal ou [role="dialog"] em vez de buscar por texto
+10. Para botões, use button:contains('Texto Exato') ou .button-class
+11. Evite seletores que podem capturar elementos não relacionados
+
+**SELETORES RECOMENDADOS:**
+- Modais: .modal, [role="dialog"]
+- Botões: button:contains('Texto Exato'), .button-class
+- Títulos: h1, h2, h3 com texto específico
+- Formulários: form, input[type="text"], .form-field
 
 **FORMATO DE SAÍDA:**
 Gere APENAS o código JavaScript do teste, sem markdown ou explicações adicionais.
@@ -437,11 +446,88 @@ O teste deve incluir as ações necessárias para tornar os elementos visíveis.
 Gere APENAS o código JavaScript corrigido, sem markdown ou explicações adicionais.`;
     }
     /**
-     * Gera caminho do arquivo de teste
+     * Gera caminho do arquivo de teste com nome inteligente
      */
-    generateSpecPath() {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        return `cypress/e2e-final/test-${timestamp}.cy.js`;
+    async generateSpecPath(instructions) {
+        try {
+            // Gera nome inteligente baseado nas instruções
+            const fileName = await this.generateIntelligentFileName(instructions);
+            return `cypress/e2e-final/${fileName}.cy.js`;
+        }
+        catch (error) {
+            // Fallback para timestamp se falhar
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            return `cypress/e2e-final/test-${timestamp}.cy.js`;
+        }
+    }
+    /**
+     * Gera nome de arquivo inteligente baseado nas instruções
+     */
+    async generateIntelligentFileName(instructions) {
+        if (!instructions) {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            return `test-${timestamp}`;
+        }
+        try {
+            const instructionText = Array.isArray(instructions)
+                ? instructions.join(' ')
+                : instructions;
+            const prompt = `GERE NOME DE ARQUIVO PARA TESTE CYPRESS
+
+**INSTRUÇÕES DO TESTE:**
+${instructionText}
+
+**TAREFA:**
+Gere um nome de arquivo descritivo e conciso para este teste Cypress.
+O nome deve:
+- Ser em português
+- Usar kebab-case (palavras separadas por hífen)
+- Ser descritivo do que o teste faz
+- Ter no máximo 40 caracteres
+- Não incluir extensão .cy.js
+- Não incluir data ou timestamp
+
+**EXEMPLOS:**
+- "Teste o botão de login" → "botao-login"
+- "Verificar modal de confirmação" → "modal-confirmacao"
+- "Testar formulário de cadastro" → "formulario-cadastro"
+- "Validar navegação do menu" → "navegacao-menu"
+- "Testar funcionalidade de busca" → "funcionalidade-busca"
+
+**FORMATO DE SAÍDA:**
+Gere APENAS o nome do arquivo, sem markdown ou explicações.`;
+            const fileName = await this.agent.generateTest(prompt);
+            const cleanFileName = this.cleanFileName(fileName);
+            // Se o nome for muito genérico, usa fallback
+            if (cleanFileName.length < 5 || cleanFileName === 'teste' || cleanFileName === 'test') {
+                return 'gerado';
+            }
+            return cleanFileName;
+        }
+        catch (error) {
+            console.log('Erro ao gerar nome inteligente, usando fallback');
+            return 'gerado';
+        }
+    }
+    /**
+     * Limpa e formata o nome do arquivo
+     */
+    cleanFileName(fileName) {
+        return fileName
+            .trim()
+            .toLowerCase()
+            .replace(/[áàâãä]/g, 'a')
+            .replace(/[éèêë]/g, 'e')
+            .replace(/[íìîï]/g, 'i')
+            .replace(/[óòôõö]/g, 'o')
+            .replace(/[úùûü]/g, 'u')
+            .replace(/[ç]/g, 'c')
+            .replace(/[ñ]/g, 'n')
+            .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
+            .replace(/\s+/g, '-') // Substitui espaços por hífens
+            .replace(/-+/g, '-') // Remove hífens duplicados
+            .replace(/^-|-$/g, '') // Remove hífens do início e fim
+            .substring(0, 40); // Limita a 40 caracteres
     }
 }
 exports.TestGenerator = TestGenerator;

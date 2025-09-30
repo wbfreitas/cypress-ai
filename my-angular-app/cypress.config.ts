@@ -13,6 +13,11 @@ export default defineConfig({
       return installCypressAiV2(on, config)
     },
     video: false,
-    screenshotOnRunFailure: false
+    screenshotOnRunFailure: false,
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    defaultCommandTimeout: 10000,
+    requestTimeout: 10000,
+    responseTimeout: 10000
   }
 })

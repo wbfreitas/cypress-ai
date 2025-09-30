@@ -54,4 +54,6 @@ export interface SetupOptions {
   clientKey?: string;
   baseUrl?: string;
   model?: string;
+  maxRetries?: number;
+  timeout?: number;
 }
