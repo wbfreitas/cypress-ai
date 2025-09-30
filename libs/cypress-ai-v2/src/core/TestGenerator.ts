@@ -1,6 +1,7 @@
 // libs/cypress-ai-v2/src/core/TestGenerator.ts
 import { StackSpotAgent } from '../agents/StackSpotAgent';
 import { CypressAiV2Config, TestGenerationOptions, TestGenerationResult, PageContext, ErrorFeedback } from '../types';
+import { PromptTemplates } from './PromptTemplates';
 import * as fs from 'fs';
 import * as path from 'path';
 import { spawn } from 'child_process';
@@ -63,7 +64,7 @@ export class TestGenerator {
     try {
       console.log(`Tentativa ${attempt}/${config.maxRetries} de geração do teste`);
       
-      const prompt = this.buildPromptWithJsonFormat(instructions, context, attempt);
+      const prompt = PromptTemplates.buildJsonFormatPrompt(instructions, context, attempt);
       const response = await agent.generateTest(prompt);
       
       if (response) {
@@ -162,61 +163,6 @@ export class TestGenerator {
     return '<!-- CONTEXTO DA PÁGINA SERÁ CAPTURADO PELO COMANDO CYPRESS -->';
   }
 
-  /**
-   * Constrói prompt com formato JSON para resposta estruturada
-   */
-  private buildPromptWithJsonFormat(instructions: string | string[], context: string, attempt: number): string {
-    const steps = Array.isArray(instructions) ? instructions.join('\n- ') : String(instructions);
-    
-    return `Você é um especialista em testes E2E com Cypress. Gere um teste baseado EXATAMENTE nas instruções fornecidas e APENAS nos elementos presentes no contexto HTML.
-
-**INSTRUÇÕES:**
-${steps}
-
-**CONTEXTO DA PÁGINA:**
-${context}
-
-**FORMATO DE RESPOSTA OBRIGATÓRIO:**
-Responda APENAS com um JSON válido no seguinte formato:
-{
-  "success": true/false,
-  "script": "código do teste Cypress completo",
-  "error": "descrição do erro se houver",
-  "suggestion": "código Cypress para executar antes do teste (ex: abrir modal, fazer login, etc.)"
-}
-
-**REGRAS OBRIGATÓRIAS:**
-1. Use APENAS elementos que existem no HTML fornecido no contexto
-2. NÃO invente elementos, classes ou IDs que não estão no HTML
-3. Use seletores ESPECÍFICOS baseados no HTML real (.modal, .button, etc.)
-4. Use cy.contains() para buscar por texto EXATO que existe no HTML
-5. Sempre aguarde elementos com .should('be.visible')
-6. Use .click({ force: true }) apenas quando necessário
-7. NÃO faça login se não foi solicitado nas instruções
-8. NÃO teste cenários de erro se não foi solicitado
-9. Use describe() e it() para organizar os testes
-10. Adicione comentários explicativos nos testes
-
-**REGRAS ESPECIAIS PARA MODAL E FORMULÁRIO:**
-- SEMPRE faça login primeiro e navegue para /dashboard
-- Para modais: use cy.contains('button', 'Abrir Modal').click() antes de testar
-- Para formulários: navegue para /form antes de testar
-
-**EXEMPLO DE RESPOSTA:**
-{
-  "success": true,
-  "script": "describe('Teste de Modal', () => { beforeEach(() => { cy.visit('/dashboard'); }); it('deve abrir modal', () => { cy.contains('button', 'Abrir Modal').click(); cy.contains('Título do Modal').should('be.visible'); }); });",
-  "error": null,
-  "suggestion": "cy.visit('/dashboard'); cy.contains('button', 'Abrir Modal').click();"
-}
-
-**IMPORTANTE:**
-- Se elementos não existem no HTML, defina success: false e explique no error
-- SEMPRE forneça uma sugestão no campo "suggestion" com código para executar antes do teste
-- O script deve ser um teste Cypress completo e executável
-- A sugestão deve conter ações como: cy.visit('/dashboard'), cy.contains('button', 'Abrir Modal').click(), etc.
-- Responda APENAS com o JSON, sem texto adicional`;
-  }
 
   /**
    * Constrói prompt inicial para geração do teste
@@ -486,7 +432,7 @@ Gere APENAS o código JavaScript corrigido, sem markdown ou explicações adicio
       console.log('HTML dinâmico capturado com sucesso!');
       
       // Gera novo teste com HTML atualizado
-      const updatedPrompt = this.buildDynamicHtmlPrompt(instructions, capturedHtml, failedTest, error);
+      const updatedPrompt = PromptTemplates.buildDynamicHtmlPrompt(instructions, capturedHtml, failedTest, error);
       const correctedTest = await this.agent.generateTest(updatedPrompt);
       const cleanTest = this.cleanGeneratedCode(correctedTest);
       
