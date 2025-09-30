@@ -1,5 +1,5 @@
 import { defineConfig } from 'cypress'
-const { installCypressAiPlugin } = require('cypress-ai/dist/agent')
+import { installCypressAiV2 } from 'cypress-ai-v2'
 
 export default defineConfig({
   e2e: {
@@ -10,13 +10,14 @@ export default defineConfig({
       'cypress/e2e-final/**/*.cy.{js,ts}'
     ],
     setupNodeEvents(on, config) {
-      return installCypressAiPlugin(on, config, { 
-        agent: process.env.AI_AGENT || 'stackspot',
-        model: process.env.AI_OLLAMA_MODEL || 'qwen2.5-coder:latest',
-        baseUrl: process.env.AI_OLLAMA_BASE_URL || 'http://localhost:11434'
-      })
+      return installCypressAiV2(on, config)
     },
     video: false,
-    screenshotOnRunFailure: false
+    screenshotOnRunFailure: false,
+    viewportWidth: 1280,
+    viewportHeight: 720,
+    defaultCommandTimeout: 10000,
+    requestTimeout: 10000,
+    responseTimeout: 10000
   }
 })
