@@ -43,6 +43,81 @@
         "<node_internals>/**"
       ],
       "sourceMaps": true
+    },
+    {
+      "name": "Debug CypressCommands",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/libs/cypress-ai-v2/dist/commands/CypressCommands.js",
+      "cwd": "${workspaceFolder}/my-angular-app",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug StackSpotAgent",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/libs/cypress-ai-v2/dist/agents/StackSpotAgent.js",
+      "cwd": "${workspaceFolder}/my-angular-app",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug CypressAiV2Plugin",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/libs/cypress-ai-v2/dist/plugin/CypressAiV2Plugin.js",
+      "cwd": "${workspaceFolder}/my-angular-app",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug CLI Setup",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/libs/cypress-ai-v2/dist/cli/setup.js",
+      "cwd": "${workspaceFolder}/my-angular-app",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug CLI Generate",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/libs/cypress-ai-v2/dist/cli/generate.js",
+      "cwd": "${workspaceFolder}/my-angular-app",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "sourceMaps": true
     }
   ]
 }
