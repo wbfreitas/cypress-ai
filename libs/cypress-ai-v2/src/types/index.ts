@@ -57,3 +57,10 @@ export interface SetupOptions {
   maxRetries?: number;
   timeout?: number;
 }
+
+export interface AIResponse {
+  script: string;
+  error?: string;
+  suggestion?: string;
+  success: boolean;
+}

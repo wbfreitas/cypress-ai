@@ -8,9 +8,17 @@ export declare class TestGenerator {
      */
     generateTest(options: TestGenerationOptions): Promise<TestGenerationResult>;
     /**
+     * Geração recursiva de teste com captura de HTML dinâmico usando JSON
+     */
+    private generateTestRecursive;
+    /**
      * Captura contexto da página atual
      */
     private capturePageContext;
+    /**
+     * Constrói prompt com formato JSON para resposta estruturada
+     */
+    private buildPromptWithJsonFormat;
     /**
      * Constrói prompt inicial para geração do teste
      */
@@ -23,6 +31,14 @@ export declare class TestGenerator {
      * Limpa o código gerado
      */
     private cleanGeneratedCode;
+    /**
+     * Faz parse da resposta JSON da IA
+     */
+    private parseAIResponse;
+    /**
+     * Executa código de sugestão para capturar HTML dinâmico
+     */
+    private executeSuggestionCode;
     /**
      * Salva o teste no arquivo
      */
